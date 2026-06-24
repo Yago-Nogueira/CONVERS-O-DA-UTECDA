@@ -16,8 +16,9 @@ import re
 import calendar
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
-from qt_ui import ttk
-from qt_ui.font import Font
+from pyqt_utils import ttk
+import pyqt_utils as ui
+from pyqt_utils.font import Font
 
 basestring = str
 
@@ -44,8 +45,8 @@ class ToolTip(QDialog):
             if k in self.fields:
                 self.fields[k]=kw.pop(k)
         if not 'variable' in kw and not self.fields['variable']:
-            self.fields['variable']=tk.StringVar(root)
-        tk.Toplevel.__init__(self, root, **kw)
+            self.fields['variable']=ui.StringVar(root)
+        ui.Toplevel.__init__(self, root, **kw)
         self.withdraw()
         self.overrideredirect(True)
         self.setup()
@@ -62,8 +63,8 @@ class ToolTip(QDialog):
         return self.fields['variable'].get()
 
     def _tooltip(self):
-        if not isinstance(self.fields.get('variable', None), tk.StringVar):
-            self.fields['variable'] = tk.StringVar(self)
+        if not isinstance(self.fields.get('variable', None), ui.StringVar):
+            self.fields['variable'] = ui.StringVar(self)
         tooltiptext = self.fields['tooltip'] or self.fields['variable'].get()
         self.fields['variable'].set(tooltiptext)
         self._widget = ttk.Label(self,
@@ -129,8 +130,8 @@ class FormWidget(ttk.Frame):
         'helpvariable': None
     }
     _factory = {
-        'variable': tk.StringVar,
-        'widget': tk.Entry
+        'variable': ui.StringVar,
+        'widget': ui.Entry
     }
 
     def __init__(self, root, **kw):
@@ -141,7 +142,7 @@ class FormWidget(ttk.Frame):
         if not 'variable' in kw:
             self.fields['variable']=self._factory.get(
                 'variable',
-                tk.StringVar)(root)
+                ui.StringVar)(root)
         ttk.Frame.__init__(self, root, **kw)
         self.setup()
 
@@ -160,8 +161,8 @@ class FormWidget(ttk.Frame):
 
     def _label(self):
         labeltext = self.fields['label'] or self.fields['field']['label'] or ''
-        if not isinstance(self.fields.get('labelvariable', None), tk.StringVar):
-            self.fields['labelvariable'] = tk.StringVar(self)
+        if not isinstance(self.fields.get('labelvariable', None), ui.StringVar):
+            self.fields['labelvariable'] = ui.StringVar(self)
         self.fields['labelvariable'].set(labeltext)
         self._wgt_label = ttk.Label(
             self,
@@ -176,8 +177,8 @@ class FormWidget(ttk.Frame):
     def _help(self):
         helptext = self.fields['help'] or ''
         if not helptext: return
-        if not isinstance(self.fields.get('helpvariable', None), tk.StringVar):
-            self.fields['helpvariable'] = tk.StringVar(self)
+        if not isinstance(self.fields.get('helpvariable', None), ui.StringVar):
+            self.fields['helpvariable'] = ui.StringVar(self)
         self.fields['helpvariable'].set(helptext)
         self._wgt_help = ToolTip(
             self._widget,
@@ -222,7 +223,7 @@ class MaskedWidget(ttk.Entry):
                 else:
                     self.fields[k]=kw[k]
         if not 'textvariable' in kw:
-            self.fields['textvariable']=tk.StringVar(master)
+            self.fields['textvariable']=ui.StringVar(master)
             kw['textvariable'] = self.fields['textvariable']
         ttk.Entry.__init__(self, master, **kw)
 
@@ -358,7 +359,7 @@ class MaskedWidget(ttk.Entry):
                 self.delete(0, len(event.widget.get()))
         widget = event.widget
         val = widget.get()
-        idx = widget.index(tk.INSERT)
+        idx = widget.index(ui.INSERT)
 
         if event.keysym == 'Left':
             if 0 <= idx < self.len:
@@ -559,15 +560,15 @@ class Calendar(ttk.Frame):
         self._calendar.tag_configure('header', background='grey90')
         self._calendar.insert('', 'end', values=cols, tag='header')
         # adjust its columns width
-        font = tkFont.Font()
+        font = Font()
         maxwidth = max(font.measure(col) for col in cols)
         for col in cols:
             self._calendar.column(col, width=maxwidth, minwidth=maxwidth,
                 anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
-        self._font = tkFont.Font()
-        self._canvas = canvas = tk.Canvas(self._calendar,
+        self._font = Font()
+        self._canvas = canvas = ui.Canvas(self._calendar,
             background=sel_bg, borderwidth=0, highlightthickness=0)
         canvas.text = canvas.create_text(0, 0, fill=sel_fg, anchor='w')
 
@@ -667,8 +668,8 @@ class Calendar(ttk.Frame):
 
 
 def main():
-    root = tk.Tk()
-    page = tk.Frame(root)
+    root = ui.Tk()
+    page = ui.Frame(root)
     c = MaskedWidget(page, 'fixed', mask='+99 (99) 999-999-999', width=20)
     c.insert(0, '6611122266647')
     c.pack()

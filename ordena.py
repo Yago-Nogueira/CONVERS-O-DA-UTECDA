@@ -1,8 +1,8 @@
 
 
 
-from qt_ui.filedialog import askdirectory  
-from qt_ui import messagebox,ttk, Toplevel
+from pyqt_utils.filedialog import askdirectory  
+from pyqt_utils import messagebox,ttk, Toplevel
 from util import Utilitarios, DadoIdioma
 # PyQt6 imports handled explicitly
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
@@ -46,7 +46,7 @@ class Ordena(QDialog):
 		self.title(self.Dado_config.idioma(46))
 		self.resizable(False, False)
 		
-		self.protocol("WM_DELETE_WINDOW",lambda tk=root:self.fechamento(tk))
+		self.protocol("WM_DELETE_WINDOW",lambda parent=root: self.fechamento(parent))
 		self.focus_force()
 		
 
@@ -110,7 +110,7 @@ class Ordena(QDialog):
 				except IOError:
 					messagebox.showerror(self.Dado_config.idioma(49),self.Dado_config.idioma(165),parent=self)
 					break
-				except TclError:
+				except Exception:
 					break
 
 

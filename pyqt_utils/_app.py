@@ -1,4 +1,4 @@
-"""QApplication singleton and mainloop for the tkinter compatibility layer."""
+"""QApplication singleton and mainloop."""
 
 from __future__ import annotations
 
@@ -20,5 +20,5 @@ def get_app() -> QApplication:
 
 
 def mainloop() -> None:
-    """Run the Qt event loop (tkinter mainloop equivalent)."""
+    """Run the Qt event loop."""
     get_app().exec()

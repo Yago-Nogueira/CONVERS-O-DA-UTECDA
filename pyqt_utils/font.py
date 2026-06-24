@@ -1,4 +1,4 @@
-"""Font utilities compatible with tkinter.font."""
+"""Font utilities for PyQt6."""
 
 from __future__ import annotations
 

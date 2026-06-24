@@ -3,8 +3,8 @@ import locale
 from sys import platform
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
-from qt_ui import ttk
-from qt_ui.font import Font
+from pyqt_utils import ttk, Toplevel, Tk
+from pyqt_utils.font import Font
 
 from util import Utilitarios
 
@@ -616,7 +616,7 @@ if __name__ == "__main__":
 		def print_sel():
 			print(cal.selection_get())
 
-		top = tk.Toplevel(root)
+		top = Toplevel(root)
 		top.grab_set()
 
 		cal = Calendar(top, font="Arial 14", selectmode='day',
@@ -627,7 +627,7 @@ if __name__ == "__main__":
 
 	
 
-	root = tk.Tk()
+	root = Tk()
 
 	ttk.Button(root, text='Calendar', command=example1).pack(padx=10, pady=10)
 

@@ -1,4 +1,4 @@
-"""Font chooser using QFontDialog, compatible with tkfontchooser.askfont()."""
+"""Font chooser using QFontDialog."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import Any
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QFontDialog, QWidget
 
-from qt_ui._app import get_app
+from pyqt_utils._app import get_app
 
 
 def _parent_widget(parent: Any) -> QWidget | None:
@@ -46,7 +46,7 @@ def _dict_to_qfont(font_args: dict) -> QFont:
 
 def askfont(master=None, text="Abcd", title="Font Chooser", **font_args) -> dict | str:
     """
-    Open the font dialog and return the chosen font dict (tkfontchooser compatible).
+    Open the font dialog and return the chosen font dict.
 
     Returns empty string if cancelled.
     """

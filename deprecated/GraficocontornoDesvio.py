@@ -1,10 +1,10 @@
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT
 
 from matplotlib.ticker import LinearLocator , FuncFormatter,IndexLocator,FixedLocator
-from qt_ui import Toplevel, ttk, messagebox
+from pyqt_utils import Toplevel, ttk, messagebox
 from datetime import datetime, timedelta, date
-from qt_ui.filedialog import askdirectory
-from tkcalendar_Days import Calendar
+from pyqt_utils.filedialog import askdirectory
+from calendar_widget import Calendar
 import matplotlib.ticker as ticker
 from qtfontchooser import askfont
 from qt_calendar import DateEntry
@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 from util import Utilitarios,VerticalScrolledFrame,DadoIdioma
 
 # from Trash import DraggableRectangle
-from qt_ui import *
-import qt_ui as tk
+from pyqt_utils import *
+import pyqt_utils as ui
 import numpy as np
 from Est_selector import EstSelector
 matplotlib.use("QtAgg")
@@ -56,12 +56,12 @@ class Graficodesvio(Toplevel):
 
 
 		self.fig, self.axes = plt.subplots()
-		self.canvas = FigureCanvasTkAgg(self.fig,self.page1)
+		self.canvas = FigureCanvasQTAgg(self.fig,self.page1)
 		self.canvas.draw()
-		self.toolbar = NavigationToolbar2Tk(self.canvas, self.page1)
+		self.toolbar = NavigationToolbar2QT(self.canvas, self.page1)
 		# plt.tight_layout()
 		# self.canvas_frame()
-		# self.toolbar = NavigationToolbar2Tk(self.canvas, self.page1)
+		# self.toolbar = NavigationToolbar2QT(self.canvas, self.page1)
 ###########################|Canvas para a scrollbar..|##############################################################################################################################################################
 		# self.canvas_prop = Canvas(self)
 		# self.canvas_prop.pack(fill = 'both',expand=1)
@@ -342,8 +342,8 @@ class Graficodesvio(Toplevel):
 					self.fig.canvas.draw()
 					# self.canvas.draw()
 
-					self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-					self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+					self.canvas.get_widget().pack(side=ui.BOTTOM, fill=ui.BOTH, expand=True)
+					self.canvas._qt_canvas.pack(side=ui.TOP, fill=ui.BOTH, expand=True)
 					self.toolbar.update()
 					self.save_png()
 					self.salvar_matriz()

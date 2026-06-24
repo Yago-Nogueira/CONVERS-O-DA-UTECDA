@@ -1,4 +1,4 @@
-"""PhotoImage compatible with tkinter and PIL images."""
+"""PhotoImage wrapper for loading images in PyQt6 widgets."""
 
 from __future__ import annotations
 

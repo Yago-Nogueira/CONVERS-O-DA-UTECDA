@@ -1,8 +1,8 @@
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.ticker import LinearLocator , FuncFormatter,IndexLocator
 from datetime import datetime, timedelta, date
-from qt_ui import ttk, messagebox, Toplevel
-from qt_ui.filedialog import askdirectory
+from pyqt_utils import ttk, messagebox, Toplevel
+from pyqt_utils.filedialog import askdirectory
 # import matplotlib.animation as manimation
 import matplotlib,os,calendar,math,io
 import matplotlib.ticker as ticker
@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 from util import Utilitarios,VerticalScrolledFrame,DadoIdioma
 # from Calcigrf import IGRF12
 matplotlib.use("QtAgg")
-from qt_ui import *  
+from pyqt_utils import *  
 from scipy import interpolate
-import qt_ui as tk
+import pyqt_utils as ui
 import numpy as np
 class Graficosetor(Toplevel):
 ###########################|Bob ô construtor|##############################################################################################################################################################
@@ -42,10 +42,10 @@ class Graficosetor(Toplevel):
 		self.page1.bind('<FocusIn>',lambda e: self.refreshCanvas())
 
 		self.fig, self.axes = plt.subplots()
-		self.canvas = FigureCanvasTkAgg(self.fig,self.page1)
+		self.canvas = FigureCanvasQTAgg(self.fig,self.page1)
 		self.canvas.draw()
 ###############################|Has deprecated ... breves...|#########################################################################################################################################################		
-		self.toolbar = NavigationToolbar2Tk(self.canvas, self.page1)
+		self.toolbar = NavigationToolbar2QT(self.canvas, self.page1)
 
 		nb.add(self.page1,text =self.Dado_config.idioma(7))
 		nb.add(self.page2,text =self.Dado_config.idioma(17))
@@ -577,8 +577,8 @@ class Graficosetor(Toplevel):
 				self.cbar = plt.colorbar(plt.contourf(self.matriz_tec,cmap=cmap,levels = self.level,vmin = 0,vmax=self.vmax, extend="both"),ticks = np.arange(0,self.vmax+1,self.passo_ctick))
 				self.cbar.ax.set_title(self.titulob,**self.fontb) 
 				self.cbar.ax.tick_params(width=float(self.largtick.get()),size=float(self.alttick.get()),labelsize=float(self.sizetick.get())) 
-				self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-				self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+				self.canvas.get_widget().pack(side=ui.BOTTOM, fill=ui.BOTH, expand=True)
+				self.canvas._qt_canvas.pack(side=ui.TOP, fill=ui.BOTH, expand=True)
 				self.toolbar.update()
 				self.fig.canvas.draw()
 	###########################|ColorBar|##############################################################################################################################################################

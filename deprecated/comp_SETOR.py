@@ -1,8 +1,8 @@
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.ticker import LinearLocator , FuncFormatter,IndexLocator
 from datetime import datetime, timedelta, date
-from qt_ui import ttk, messagebox, Toplevel
-from qt_ui.filedialog import askdirectory
+from pyqt_utils import ttk, messagebox, Toplevel
+from pyqt_utils.filedialog import askdirectory
 # import matplotlib.animation as manimation
 import matplotlib,os,calendar,math,io
 import matplotlib.ticker as ticker
@@ -15,13 +15,13 @@ from util import Utilitarios,VerticalScrolledFrame,DadoIdioma
 # matplotlib.use("TkAgg")
 import matplotlib
 
-from qt_ui import * 
+from pyqt_utils import * 
 from scipy.interpolate import griddata
 from scipy import interpolate
-import qt_ui as tk
+import pyqt_utils as ui
 import numpy as np
 
-class COMP_SETOR(tk.Toplevel):
+class COMP_SETOR(ui.Toplevel):
 	def __init__(self, matplotlib_figure, siglas_estacao, data, diretorio_dados, vtec_max,var_axix_y,var_estacao):
 		self._matplotlib_figure = matplotlib_figure
 		self._siglas_estacao = siglas_estacao

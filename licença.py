@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from qt_ui.filedialog import askdirectory
-from qt_ui import Toplevel, messagebox
+from pyqt_utils.filedialog import askdirectory
+from pyqt_utils import Toplevel, messagebox
 
 
 from uuid import getnode as get_mac
@@ -10,8 +10,8 @@ from uuid import getnode as get_mac
 
 
 from util import DadoIdioma,Utilitarios
-from qt_ui import *
-import qt_ui as tk
+from pyqt_utils import *
+import pyqt_utils as ui
 import getpass
 class Licença(Toplevel):
 	def __init__(self, master):
@@ -92,7 +92,7 @@ def getli(master=None):
 	return lisc.get_res()
 #-----------------------------------------------------TESTE-------------------------------------------------
 if __name__ == "__main__":
-	from qt_ui import Tk
+	from pyqt_utils import Tk
 	from sys import platform
 	janelateste = Tk()
 	def callback():

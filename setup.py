@@ -28,7 +28,7 @@ setup(
 				"uuid",
 				"getpass",
 				"math",
-				"qt_ui",
+				"pyqt_utils",
 				"qt_calendar",
 				"qtSimpleDialog",
 				"qtfontchooser",

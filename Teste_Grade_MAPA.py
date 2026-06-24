@@ -12,7 +12,7 @@ import pandas as pd
 from scipy.interpolate import griddata
 from util import DadoIdioma, Utilitarios
 
-from qt_ui import *
+from pyqt_utils import *
 
 root = Tk()
 root.mainloop()

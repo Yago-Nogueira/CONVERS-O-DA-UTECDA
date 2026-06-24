@@ -1,4 +1,4 @@
-"""Tk and Toplevel window classes."""
+"""Application window classes using PyQt6."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from ._widgets import Frame
 
 
 class Tk(BaseWidget):
-    """Root window backed by QMainWindow."""
+    """Main application window backed by QMainWindow."""
 
     def __init__(self, master: Any = None, **kwargs):
         get_app()

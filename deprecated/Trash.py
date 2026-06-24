@@ -2514,7 +2514,7 @@
 # # # # # # # # # # import tkinter
 
 # # # # # # # # # # from matplotlib.backends.backend_tkagg import (
-# # # # # # # # # #     FigureCanvasTkAgg, NavigationToolbar2Tk)
+# # # # # # # # # #     FigureCanvasQTAgg, NavigationToolbar2QT)
 # # # # # # # # # # # Implement the default Matplotlib key bindings.
 # # # # # # # # # # from matplotlib.backend_bases import key_press_handler
 # # # # # # # # # # from matplotlib.figure import Figure
@@ -2529,11 +2529,11 @@
 # # # # # # # # # # t = np.arange(0, 3, .01)
 # # # # # # # # # # fig.add_subplot().plot(t, 2 * np.sin(2 * np.pi * t))
 
-# # # # # # # # # # canvas = FigureCanvasTkAgg(fig, master=root)  # A tk.DrawingArea.
+# # # # # # # # # # canvas = FigureCanvasQTAgg(fig, master=root)  # A tk.DrawingArea.
 # # # # # # # # # # canvas.draw()
 
 # # # # # # # # # # # pack_toolbar=False will make it easier to use a layout manager later on.
-# # # # # # # # # # toolbar = NavigationToolbar2Tk(canvas, root, pack_toolbar=True)
+# # # # # # # # # # toolbar = NavigationToolbar2QT(canvas, root, pack_toolbar=True)
 # # # # # # # # # # toolbar.update()
 
 
@@ -2549,7 +2549,7 @@
 # # # # # # # # # # # sure the UI controls are displayed as long as possible.
 # # # # # # # # # # button.pack(side=tkinter.BOTTOM)
 # # # # # # # # # # toolbar.pack(side=tkinter.BOTTOM, fill=tkinter.X)
-# # # # # # # # # # canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
+# # # # # # # # # # canvas.get_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
 
 # # # # # # # # # # tkinter.mainloop()
 

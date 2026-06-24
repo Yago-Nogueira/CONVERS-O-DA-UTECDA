@@ -1,4 +1,4 @@
-"""ttk-themed widget compatibility layer."""
+"""Themed widget components using PyQt6."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ._base import BaseWidget, TclError
+from ._base import BaseWidget, AppError
 from ._variables import DoubleVar, StringVar, Variable
 from ._widgets import Button, Checkbutton, Entry, Frame, Label, Scrollbar
 
@@ -191,7 +191,7 @@ class Treeview(BaseWidget):
     def item(self, item_id: str, option: str | None = None, **kwargs) -> Any:
         qt_item = self._items.get(item_id)
         if qt_item is None:
-            raise TclError(f"Item {item_id} not found")
+            raise AppError(f"Item {item_id} not found")
         if option is None and not kwargs:
             vals = []
             for i in range(self._qt.columnCount()):

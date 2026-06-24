@@ -1,19 +1,24 @@
 """
-PyQt6 compatibility layer for tkinter.
+PyQt6 UI utility module.
 
-Usage::
-
-    import qt_ui as tk
-    from qt_ui import *
+Provides widget classes, layout helpers, and variable bindings
+for building desktop applications with PyQt6.
 """
 
 from __future__ import annotations
 
 from . import filedialog, font, messagebox, ttk
 from ._app import get_app, mainloop
-from ._base import TclError
+from ._base import AppError
+
+# Alias
+TclError = AppError
 from ._image import PhotoImage
-from ._matplotlib import FigureCanvasTkAgg, NavigationToolbar2Tk
+from ._matplotlib import FigureCanvasQTAgg, NavigationToolbar2QT
+
+# Aliases
+FigureCanvasTkAgg = FigureCanvasQTAgg
+NavigationToolbar2Tk = NavigationToolbar2QT
 from ._variables import BooleanVar, DoubleVar, IntVar, StringVar, Variable
 from ._widgets import (
     Button,
@@ -88,7 +93,7 @@ __all__ = [
     "EXTENDED",
     "Entry",
     "FALSE",
-    "FigureCanvasTkAgg",
+    "FigureCanvasQTAgg",
     "Frame",
     "GROOVE",
     "HORIZONTAL",
@@ -106,7 +111,7 @@ __all__ = [
     "NS",
     "NSEW",
     "NW",
-    "NavigationToolbar2Tk",
+    "NavigationToolbar2QT",
     "PhotoImage",
     "Radiobutton",
     "RIDGE",
@@ -120,7 +125,7 @@ __all__ = [
     "Spinbox",
     "StringVar",
     "SW",
-    "TclError",
+    "AppError",
     "Text",
     "Tk",
     "TOP",

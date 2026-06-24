@@ -1,4 +1,4 @@
-"""Tkinter-compatible variable classes backed by Qt signals."""
+"""Variable classes backed by Qt signals."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ class _TraceCallback:
 
 
 class Variable(QObject):
-    """Base variable with get/set/trace compatible with tkinter."""
+    """Base observable variable with get/set/trace functionality."""
 
     valueChanged = pyqtSignal(object)
 

@@ -1,4 +1,4 @@
-"""Base widget mixin implementing tkinter-like geometry and event APIs."""
+"""Base widget mixin implementing geometry management and event APIs for PyQt6."""
 
 from __future__ import annotations
 
@@ -23,8 +23,12 @@ from PyQt6.QtWidgets import (
 from ._app import get_app
 
 
-class TclError(Exception):
-    """Tkinter-compatible exception type."""
+class AppError(Exception):
+    """Application-level exception type."""
+
+
+# Alias for backward compatibility
+TclError = AppError
 
 
 class _PackEntry:
@@ -41,7 +45,7 @@ class _PackEntry:
 
 
 class BaseWidget:
-    """Mixin providing tkinter widget behaviour on top of Qt widgets."""
+    """Mixin providing widget behaviour with layout management and event handling."""
 
     _widget_counter = 0
 

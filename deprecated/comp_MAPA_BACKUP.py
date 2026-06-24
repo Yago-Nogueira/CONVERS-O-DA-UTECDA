@@ -1,8 +1,8 @@
 from util import Utilitarios,DadoIdioma
 from datetime import datetime#, timedelta, date
 from threading import Thread
-from qt_ui import Toplevel
-import qt_ui as tk
+from pyqt_utils import Toplevel
+import pyqt_utils as ui
 import numpy as np
 from scipy.interpolate import griddata
 import os,math,_thread
@@ -13,7 +13,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 
-class COMP_MAPA(tk.Toplevel):	
+class COMP_MAPA(ui.Toplevel):	
 	def __init__(self, filedir, data, vm, h_i, h_f, h_interval, siglas, extend_LAT_LONG, var_barra_progess, var_barra_progess_label, elevacao, dado_config,Coordenadas_equador_Magnetico_X,Coordenadas_equador_Magnetico_Y):
 		self._filedir = filedir
 		self._data = data
