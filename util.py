@@ -13,12 +13,19 @@ import screeninfo
 import threading
 import traceback
 import datetime
+import logging
 import requests
 import psutil
 import math
 import igrf
 import sys
 import os
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 class thread_with_trace(threading.Thread): 
@@ -101,7 +108,7 @@ class DadoIdioma(object):
             # print(self.Settings)
             if not self.Settings:raise ValueError
         except (IOError,IndexError,ValueError,PermissionError) as e:
-            print(e)
+            logging.warning("Failed to load Settings.cfg, using defaults: %s", e)
             ####################################
             #  alterar para gerar executavel   #
             ####################################
@@ -374,10 +381,14 @@ class Utilitarios:
         except (Exception) as  e:raise IOError(DadoIdioma().idioma(14))
     
     def gravar_erro(self,exp):
-        erro = open('ERRO.txt','w+')
-        erro.write(str(exp)+"\n")
-        [erro.write(str(tb)) for tb in  traceback.format_tb(sys.exc_info()[2])]
-        erro.close()
+        logging.error("Unhandled exception: %s", exp, exc_info=True)
+        try:
+            with open('ERRO.txt','w+') as erro:
+                erro.write(str(exp)+"\n")
+                for tb in traceback.format_tb(sys.exc_info()[2]):
+                    erro.write(str(tb))
+        except IOError as io_err:
+            logging.error("Failed to write error file: %s", io_err)
 
     def resource_path(object, relative_path):
         try:base_path = sys._MEIPASS

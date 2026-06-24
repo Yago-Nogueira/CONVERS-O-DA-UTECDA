@@ -7,6 +7,7 @@ from qtfontchooser import askfont
 import matplotlib.pyplot as plt
 from util import Utilitarios 
 import numpy as np
+import logging
 import warnings
 
 class COMP_INDV(QDialog):	
@@ -117,9 +118,11 @@ class COMP_INDV(QDialog):
 				except KeyError:self._axes.xaxis.set_major_locator(ticker.MultipleLocator(2))
 				
 				try:self._axes.set_xlim(self._dado_config.Settings["INDIVIDUAL"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["INDIVIDUAL"]["fValueMax_Axes_X_temp"])
-				except KeyError:pass
+				except KeyError:
+					logging.debug("INDIVIDUAL: X-axis temp limits not configured, using defaults")
 				try:self._axes.set_ylim(self._dado_config.Settings["INDIVIDUAL"]["fValueMin_Axes_Y_temp"]*60,self._dado_config.Settings["INDIVIDUAL"]["fValueMax_Axes_Y_temp"]*60)
-				except KeyError:pass
+				except KeyError:
+					logging.debug("INDIVIDUAL: Y-axis temp limits not configured, using defaults")
 
 
 				self._axes.yaxis.set_major_formatter(ticker.FuncFormatter(self.major_formatterhora))
