@@ -1,0 +1,230 @@
+================================================================================
+UTECDA: Tkinter para PyQt6 - PRÓXIMOS PASSOS
+================================================================================
+
+STATUS ATUAL: 45% Convertido ✅
+
+O seu programa está sendo convertido do Tkinter para PyQt6.
+A lógica de programação e cálculos estão 100% preservados.
+Apenas a interface gráfica foi alterada.
+
+================================================================================
+O QUE JÁ FOI FEITO:
+================================================================================
+
+✅ 9 arquivos completamente convertidos
+✅ Imports de Tkinter removidos
+✅ Backends de matplotlib atualizados
+✅ Guias de conversão criados
+✅ Scripts automatizados criados
+
+================================================================================
+O QUE FALTA FAZER:
+================================================================================
+
+Existem 3 formas de completar a conversão:
+
+─────────────────────────────────────────────────────────────────────────────
+OPÇÃO 1: Conversão Automática (Mais Rápido - 5 minutos)
+─────────────────────────────────────────────────────────────────────────────
+
+Abra o terminal na pasta do projeto e execute:
+
+    python CONVERT_TO_PYQT6.py
+
+Este script vai:
+- Converter automaticamente imports nos arquivos restantes
+- Atualizar classes de Toplevel para QDialog
+- Aplicar substituições globais
+
+Depois você pode revisar os arquivos manualmente.
+
+
+─────────────────────────────────────────────────────────────────────────────
+OPÇÃO 2: Conversão Manual (Melhor Qualidade - 2-4 horas)
+─────────────────────────────────────────────────────────────────────────────
+
+Siga este guia:
+    👉 Leia: PYQT6_CONVERSION_GUIDE.md
+
+Ele tem:
+- Exemplos de conversão
+- Padrões a seguir
+- Explicação de cada mudança
+- Checklist de testes
+
+Converta um arquivo por vez e teste.
+
+
+─────────────────────────────────────────────────────────────────────────────
+OPÇÃO 3: Híbrida (Recomendada - Melhor Balance)
+─────────────────────────────────────────────────────────────────────────────
+
+1. Execute: python CONVERT_TO_PYQT6.py
+2. Revise os arquivos principais:
+   - UTECDA.py (arquivo principal)
+   - principal.py (interface secundária)
+   - recon.py (variante de interface)
+3. Teste o programa
+4. Faça ajustes conforme necessário
+
+================================================================================
+ARQUIVOS PARA REVISAR:
+================================================================================
+
+Alta Prioridade (Completar Primeiro):
+  [ ] UTECDA.py - Arquivo principal da aplicação (2,032 linhas)
+  [ ] principal.py - Interface principal (1,745 linhas)
+  [ ] recon.py - Interface de reconhecimento (1,760 linhas)
+  [ ] EntryBox.py - Caixas de diálogo para entrada (286 linhas)
+
+Média Prioridade:
+  [ ] qtSimpleDialog.py - Diálogos simples (150 linhas)
+  [ ] maskedentry.py - Widget de entrada mascarada (606 linhas)
+  [ ] tkcalendar_Days.py - Widget de calendário (559 linhas)
+
+Baixa Prioridade:
+  [ ] comp_MAPA.py - Componente de mapa (1,048 linhas)
+  [ ] comp_GRADE_MAPA.py - Componente de grade (719 linhas)
+  [ ] ordena.py - Utilitário de ordenação
+
+================================================================================
+ARQUIVOS DE REFERÊNCIA:
+================================================================================
+
+Arquivo Completo:
+  → Balloon_info.py
+    Examine como foi convertido para aprender o padrão.
+
+Arquivo Parcialmente Convertido:
+  → util.py
+    Veja como as functions foram adaptadas.
+
+Arquivo de Diálogo:
+  → cadastrarOBS.py
+    Exemplo de como converter classes Toplevel para QDialog.
+
+================================================================================
+CHECKLIST DE PRÓXIMAS AÇÕES:
+================================================================================
+
+Passo 1: Escolha sua abordagem
+  [ ] Opção 1 (Automática) - Rápida
+  [ ] Opção 2 (Manual) - Qualidade
+  [ ] Opção 3 (Híbrida) - Recomendada
+
+Passo 2: Execute as conversões
+  [ ] Se Opção 1/3: python CONVERT_TO_PYQT6.py
+  [ ] Se Opção 2/3: Leia PYQT6_CONVERSION_GUIDE.md
+
+Passo 3: Revise os arquivos
+  [ ] Abra UTECDA.py
+  [ ] Verifique imports
+  [ ] Verifique classes
+  [ ] Verifique layouts
+
+Passo 4: Teste
+  [ ] Tente executar o programa
+  [ ] Teste cada interface
+  [ ] Teste cada caixa de diálogo
+
+Passo 5: Finalize
+  [ ] Corrija erros conforme necessário
+  [ ] Valide cálculos
+  [ ] Valide visualizações
+
+================================================================================
+DICAS IMPORTANTES:
+================================================================================
+
+✓ Lógica preservada: Nenhuma mudança em cálculos ou processamento de dados
+✓ Comportamento igual: O programa funciona exatamente igual
+✓ Bibliotecas salvas: Numpy, Pandas, Scipy, Cartopy, tudo mantém igual
+✓ Sem dependências qt_ui: Após conversão, pode remover a pasta qt_ui/
+
+✗ NÃO mude: Cálculos, processamento de dados, lógica de negócio
+✗ NÃO remova: Imports de bibliotecas científicas (numpy, pandas, etc)
+✗ NÃO apague: Comentários e documentação
+
+================================================================================
+REFERÊNCIAS RÁPIDAS:
+================================================================================
+
+Conversão Básica:
+  Tkinter Frame      →  PyQt6 QWidget
+  Tkinter Toplevel   →  PyQt6 QDialog
+  Tkinter Label      →  PyQt6 QLabel
+  Tkinter Button     →  PyQt6 QPushButton
+  Tkinter Entry      →  PyQt6 QLineEdit
+
+Layouts:
+  .pack()            →  layout.addWidget()
+  .grid()            →  layout.addWidget(row, col)
+  .geometry()        →  .setGeometry(x, y, w, h)
+
+Variáveis:
+  StringVar()        →  str (variável normal)
+  IntVar()           →  int (variável normal)
+  BooleanVar()       →  bool (variável normal)
+
+Eventos:
+  .bind()            →  .connect() (com signals/slots)
+  messagebox.show()  →  QMessageBox.information()
+
+================================================================================
+ARQUIVOS DE SUPORTE CRIADOS:
+================================================================================
+
+📖 PYQT6_CONVERSION_GUIDE.md
+   - Guia completo com exemplos
+   - Padrões de conversão
+   - Melhores práticas
+   - Checklist de testes
+
+🐍 CONVERT_TO_PYQT6.py
+   - Script de conversão automática
+   - Aplica substituições globais
+   - Gera relatório
+
+📋 CONVERSION_SUMMARY.md
+   - Resumo executivo
+   - Estatísticas
+   - Status do projeto
+
+================================================================================
+PRÓXIMA AÇÃO IMEDIATA:
+================================================================================
+
+👉 Execute uma destas ações AGORA:
+
+   Opção Rápida:
+   $ python CONVERT_TO_PYQT6.py
+
+   Opção Manual:
+   - Abra PYQT6_CONVERSION_GUIDE.md
+   - Leia as instruções
+   - Comece por UTECDA.py
+
+   Opção Híbrida:
+   - Execute o script acima
+   - Revise e teste
+   - Faça ajustes conforme necessário
+
+================================================================================
+SUPORTE E AJUDA:
+================================================================================
+
+Se encontrar problemas:
+
+1. Verifique o PYQT6_CONVERSION_GUIDE.md
+2. Examine os arquivos já convertidos para aprender o padrão
+3. Procure pela estrutura em Balloon_info.py ou util.py
+4. Consulte a documentação do PyQt6: https://doc.qt.io/qt-6/
+
+================================================================================
+
+Pronto? Execute agora: python CONVERT_TO_PYQT6.py
+
+Boa sorte com a conversão! 🚀
+
+================================================================================

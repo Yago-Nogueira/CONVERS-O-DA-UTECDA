@@ -1,0 +1,7 @@
+module 'PIL.Image' has no attribute 'ANTIALIAS'
+  File "D:\OneDrive\prog\UTECDA(windows10)\UTECDA.py", line 2248, in <module>
+    Main_UTECDA(root).pack(side = tk.TOP, fill = tk.BOTH, expand = tk.TRUE)
+    ^^^^^^^^^^^^^^^^^
+  File "D:\OneDrive\prog\UTECDA(windows10)\UTECDA.py", line 708, in __init__
+    self.IMAGE_GOOGLE_KMZ= ImageTk.PhotoImage((Image.open(self.uti.resource_path("img/earth.png"))).resize((25,25), Image.ANTIALIAS))
+                                                                                                                    ^^^^^^^^^^^^^^^

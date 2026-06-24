@@ -1,0 +1,9 @@
+{
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+    "Accept": "*/*",
+    "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Content-Type": "application/json",
+    "X-Goog-AuthUser": "0",
+    "x-origin": "https://music.youtube.com",
+    "Cookie" : "VISITOR_INFO1_LIVE=fUp9QT4GKao; __Secure-3PSID=7AfTF5RT_CASXLPyjbDqId2LZnoxa2baRTwRUJgpljjAbQO05SmJuaBWaLEDGvPSmvPSqQ.; __Secure-3PAPISID=gZtWs8zctNrFvS0S/A7httlcwAA85E0YgH; LOGIN_INFO=AFmmF2swRQIgJZQjBiNsaMwO5Y6_x2_V_ReQQu0hCmp3ai0VwApMFIYCIQCpOqOh7yKmqncrtg3fqPZ6XUE6ni0EEmAaGq4BNP8UwQ:QUQ3MjNmdzh3N3BFckI3U2FKUGxTZ1lldmFIWHU0S2M3aU04OENiOHFBeGI4bGp5T2YxcXE5MjNvUXBPaTcxenFVcmVueENSQ0VXemF3c1VTT1NtMTFlaDhEa3JmZEluc21oWG9wZWhHaHZ4cXIxekt5TnVveTBjRXJmQi05bHY5dEV5VVhfUUt5aG1jLUg4Sy15MUpWbWFsNzBfdkk1Nzk3aUNibEZpWkVteTlWcXdsdDlFTGp3; _gcl_au=1.1.1972463162.1621258778; PREF=tz=America.Sao_Paulo&f5=30000&volume=5&library_tab_browse_id=FEmusic_liked_playlists; YSC=MY61_J7PYOM; __Secure-3PSIDCC=AJi4QfFvc_KzdMkFAkb7YFa-WcpO96qTEPhcD_IBbAnZNPGLqk3OF8QISUDuqPCCX2ch1gIyJzqz"
+}
