@@ -2,6 +2,11 @@ from datetime import datetime, timedelta, date
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 from util import Utilitarios, DadoIdioma
+from shared_utils import (
+	apply_tick_params, configure_axis_locator, apply_axes_limits,
+	setup_tick_label_pickers, create_jet_colormap, ensure_date_order,
+	build_std_filepath, interpolate_grid,
+)
 from matplotlib import colors as mcolors
 from scipy.interpolate import griddata
 from scipy import interpolate
@@ -72,10 +77,7 @@ class COMP_EIA(QDialog):
 			self.eixoG = [dip[3] for dip in self._estacao_select]
 			self.min_y = int(self._estacao_select[-1][3])
 			self.max_y = int(self._estacao_select[0][3])
-		if self._data_inicial > self._data_final:
-			backdata = self._data_inicial
-			self._data_inicial = self._data_final
-			self._data_final = backdata
+		self._data_inicial, self._data_final = ensure_date_order(self._data_inicial, self._data_final)
 		delta = self._data_final - self._data_inicial
 		delta_days = delta.days + 1
 		Matriz_DADOS = [];lat_y = [];dip_y = [];list_hora = [np.arange(0,24,(1/60))] * len(self._estacao_select)
@@ -86,8 +88,8 @@ class COMP_EIA(QDialog):
 			for contd in range(delta_days):
 				data = (self._data_inicial + timedelta(days=contd))
 				dia_ano = data.timetuple().tm_yday
-				nfile = ("/%s%.3i-%i-%.2i-%.2i.Std") % (sigla.lower(),dia_ano,data.year,data.month,data.day)
-				Matriz_DADOS_day.append(self.uti.Leitura_trip(self._diretorio_dados + nfile)[0])
+				destino = build_std_filepath(self._diretorio_dados, sigla, data)
+				Matriz_DADOS_day.append(self.uti.Leitura_trip(destino)[0])
 				# DADOS[sigla+'.'+str(data.day)+'.'+"VTEC"] = self.uti.Leitura_trip(filedir + nfile)[0]
 			Matriz_DADOS.append(Matriz_DADOS_day)
 
@@ -115,17 +117,7 @@ class COMP_EIA(QDialog):
 
 			self.resp_matriz = list(zip(x, y, z))
 			
-			xi = np.linspace(x.min(), x.max(), numcols)
-			yi = np.linspace(y.min(), y.max(), numrows)
-			xi, yi = np.meshgrid(xi, yi)
-			zi = griddata((x, y), z,(xi, yi), method = 'linear')
-			x = np.arange(0, zi.shape[1])
-			y = np.arange(0, zi.shape[0])
-			zi = np.ma.masked_invalid(zi)
-			x1 = xi[~zi.mask]
-			y1 = yi[~zi.mask]
-			newarr = zi[~zi.mask]
-			GD1 = interpolate.griddata((x1, y1), newarr.ravel(),(xi, yi),method='linear')
+			xi, yi, GD1 = interpolate_grid(x, y, z, numcols, numrows)
 
 			
 
@@ -137,9 +129,7 @@ class COMP_EIA(QDialog):
 			passo = self._vtec_max/15
 			level=np.arange(0,(self._vtec_max+1),passo)
 			
-			self.cmap = plt.cm.get_cmap("jet").copy()
-			self.cmap.set_under("white")
-			self.cmap.set_over("darkred")
+			self.cmap = create_jet_colormap()
 
 
 			self.cbar = self._matplotlib_figure.colorbar(self.axes.contourf(xi,yi,GD1,levels=level,cmap=self.cmap,vmin = 0,vmax=self._vtec_max,extend="both") , ax = self.axes,ticks = np.arange(0,self._vtec_max+1,10) )
@@ -148,40 +138,21 @@ class COMP_EIA(QDialog):
 
 			self.cbar.ax.set_title(self.titulob,**font,picker=5,pad=30,gid="label_bar_graph:EIA")
 			
-			for label in self.axes.get_xticklabels():  # make the xtick labels pickable
-				label.set_picker(True)
-				label.set_gid("ticks_x:EIA")
-			for label in self.axes.get_yticklabels():  # make the xtick labels pickable
-				label.set_picker(True)
-				label.set_gid("ticks_y:EIA")
+			setup_tick_label_pickers(self.axes, "EIA")
 
 			self.axes.minorticks_on()
-			self.axes.tick_params(axis='x', which='minor', width=self._dado_config.Settings["EIA"]["fWidthTickMinor_X"],size=self._dado_config.Settings["EIA"]["fHeightTickMinor_X"])#,labelsize=tam_x))
-			self.axes.tick_params(axis='x', which='major', width=self._dado_config.Settings["EIA"]["fWidthTickMajor_X"],size=self._dado_config.Settings["EIA"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["EIA"]["fSizeLabelsTick_X"])
-			self.axes.tick_params(axis='y', which='minor', width=self._dado_config.Settings["EIA"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["EIA"]["fHeightTickMinor_Y"])#,labelsize=tam_y))
-			self.axes.tick_params(axis='y', which='major', width=self._dado_config.Settings["EIA"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["EIA"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["EIA"]["fSizeLabelsTick_Y"])
+			apply_tick_params(self.axes, self._dado_config.Settings, "EIA")
 			self.axes.set_xlim(0,24)
 			
 			
 			if self._var_estacao:
 				self.axes.yaxis.set_major_locator(ticker.FixedLocator(self.estacao_select_dips_e_lats[self._varaxix_y]))
 			else:
-				try:
-					if self._dado_config.Settings["EIA"]["fValue_Passo_Ticks_Y_temp"]:self.axes.yaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["EIA"]["fValue_Passo_Ticks_Y_temp"]))
-					elif self._dado_config.Settings["EIA"]["iValue_Num_Ticks_Y_temp"]:self.axes.yaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["EIA"]["iValue_Num_Ticks_Y_temp"]))
-					else:self.axes.yaxis.set_major_locator(ticker.LinearLocator())
-				except KeyError:self.axes.yaxis.set_major_locator(ticker.LinearLocator())
+				configure_axis_locator(self.axes.yaxis, self._dado_config.Settings, "EIA", "Y", ticker.LinearLocator())
 			
-			try:
-				if self._dado_config.Settings["EIA"]["fValue_Passo_Ticks_X_temp"]:self.axes.xaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["EIA"]["fValue_Passo_Ticks_X_temp"]))
-				elif self._dado_config.Settings["EIA"]["iValue_Num_Ticks_X_temp"]:self.axes.xaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["EIA"]["iValue_Num_Ticks_X_temp"]))
-				else:self.axes.xaxis.set_major_locator(ticker.LinearLocator())
-			except KeyError:self.axes.xaxis.set_major_locator(ticker.LinearLocator())
+			configure_axis_locator(self.axes.xaxis, self._dado_config.Settings, "EIA", "X", ticker.LinearLocator())
 
-			try:self.axes.set_xlim(self._dado_config.Settings["EIA"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["EIA"]["fValueMax_Axes_X_temp"])
-			except KeyError:pass
-			try:self.axes.set_ylim(self._dado_config.Settings["EIA"]["fValueMin_Axes_Y_temp"],self._dado_config.Settings["EIA"]["fValueMax_Axes_Y_temp"])
-			except KeyError:pass
+			apply_axes_limits(self.axes, self._dado_config.Settings, "EIA")
 			
 
 			self.axes.yaxis.set_major_formatter(ticker.FuncFormatter(self.major_formatterest))

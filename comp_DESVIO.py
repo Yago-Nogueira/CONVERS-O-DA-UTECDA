@@ -3,6 +3,10 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 import numpy as np
 from util import Utilitarios, DadoIdioma
+from shared_utils import (
+	apply_tick_params, configure_axis_locator, ensure_date_order,
+	build_std_filepath,
+)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import warnings
@@ -37,7 +41,7 @@ class COMP_DESVIO(QDialog):
 		font = self._dado_config.get_font_Settings("DESVIO")
 		font_anchored = font
 		del(font_anchored['family'])
-		if self._data_inicial > self._data_final:backdata = self._data_inicial;self._data_inicial = self._data_final;self._data_final = backdata
+		self._data_inicial, self._data_final = ensure_date_order(self._data_inicial, self._data_final)
 		self.delta = self._data_final - self._data_inicial
 		self.delta_days = self.delta.days+1
 		len_est = len(self._siglas_estacao)
@@ -56,8 +60,7 @@ class COMP_DESVIO(QDialog):
 		for est_s in self._siglas_estacao:
 			self.matrizstd = []
 			for dia_select in self._dias_calmos:
-				nomefile = ("/%s%.3i-%i-%.2i-%.2i.Std") % (est_s[0].lower(),dia_select.timetuple().tm_yday,dia_select.year,dia_select.month,dia_select.day)
-				caminho_arquivo = self._diretorio_dados + nomefile
+				caminho_arquivo = build_std_filepath(self._diretorio_dados, est_s[0], dia_select)
 				self.matrizstd.append(self.uti.Leitura_trip(caminho_arquivo))
 			self.matrizstd = np.array(self.matrizstd).T
 			self.media_calmo = []
@@ -73,8 +76,7 @@ class COMP_DESVIO(QDialog):
 			for contd in range(self.delta_days):
 				datafile = (self._data_inicial + timedelta(days=contd))
 				self.datas_axes_X.append([datafile.date(),datafile.day])
-				nomefile_p = ("/%s%.3i-%i-%.2i-%.2i.Std") % (est_s[0].lower(),datafile.timetuple().tm_yday,datafile.year,datafile.month,datafile.day)
-				caminho_arquivo_p = self._diretorio_dados + nomefile_p
+				caminho_arquivo_p = build_std_filepath(self._diretorio_dados, est_s[0], datafile)
 				self.matriz_tec_p.append(self.uti.Leitura_trip(caminho_arquivo_p))
 			self.matriz_tec_p = np.array(self.matriz_tec_p).reshape(self.delta_days,1440)
 			self.C_sigla.append(est_s[0])
@@ -122,19 +124,12 @@ class COMP_DESVIO(QDialog):
 				AX.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 				AX.tick_params(axis='both',direction='inout', which='major',top=True,right=True)#, width=float(self.largtick.get()),size=float(self.alttick.get()),labelsize=float(self.sizetick.get()))
 				AX.tick_params(axis='both',direction='inout', which='minor' ,top=True,right=True)#,width=float(self.largtickMinor.get()) ,size=float(self.alttickMinor.get()))
-				AX.tick_params(axis='x', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_X"])#,labelsize=float(tam_x))
-				AX.tick_params(axis='x', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_X"])
-				AX.tick_params(axis='y', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_Y"])#,labelsize=float(tam_y))
-				AX.tick_params(axis='y', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_Y"])
+				apply_tick_params(AX, self._dado_config.Settings, "DESVIO")
 			else:
 				at = AnchoredText("%s(dip latitude %s)"%(sigla,dip_lat), prop=font_anchored, frameon=False, loc='upper left', borderpad=0)
 				axes[0].add_artist(at)
 				axes[0].set_ylabel(self.tituloy,picker=5,gid="y_label_graph:Desvio",**font)
-				try:
-					if self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_Y_temp"]:axes[0].yaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_Y_temp"]))
-					elif self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_Y_temp"]:axes[0].yaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_Y_temp"]))
-					else:axes[0].yaxis.set_major_locator(ticker.LinearLocator(4))
-				except KeyError:axes[0].yaxis.set_major_locator(ticker.LinearLocator(4))
+				configure_axis_locator(axes[0].yaxis, self._dado_config.Settings, "DESVIO", "Y", ticker.LinearLocator(4))
 				axes[0].yaxis.get_major_ticks()[-1].set_visible(False)
 				for label in axes[0].get_yticklabels():
 					label.set_picker(True)
@@ -143,23 +138,14 @@ class COMP_DESVIO(QDialog):
 			for AX,d_ax_X in zip(self.axes[0],self.datas_axes_X):AX.set_title(d_ax_X[self._formato_data],picker=5, gid="Data_Y:Desvio",**font)
 			else:self.axes[0][0].yaxis.get_major_ticks()[-1].set_visible(True)
 			for AX in self.axes[-1]:
-				try:
-					if self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_X_temp"]:AX.xaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_X_temp"]))
-					elif self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_X_temp"]:AX.xaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_X_temp"]))
-					else:AX.xaxis.set_major_locator(ticker.LinearLocator(7))
-				except KeyError:AX.xaxis.set_major_locator(ticker.LinearLocator(7))
+				configure_axis_locator(AX.xaxis, self._dado_config.Settings, "DESVIO", "X", ticker.LinearLocator(7))
 				labels_AX_X = AX.get_xticklabels()
 				plt.setp(labels_AX_X[-1], visible=False)
 				for label in AX.get_xticklabels():
 					label.set_picker(True)
 					label.set_gid("ticks_x:Desvio")
 			else:
-				try:
-					if self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_X_temp"]:AX.xaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["DESVIO"]["fValue_Passo_Ticks_X_temp"]))
-					elif self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_X_temp"]:AX.xaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["DESVIO"]["iValue_Num_Ticks_X_temp"]))
-					else:AX.xaxis.set_major_locator(ticker.LinearLocator(7))
-				except KeyError:
-					AX.xaxis.set_major_locator(ticker.LinearLocator(7))
+				configure_axis_locator(AX.xaxis, self._dado_config.Settings, "DESVIO", "X", ticker.LinearLocator(7))
 				plt.setp(labels_AX_X, visible=True)
 
 		self._matplotlib_figure.set_facecolor('lightgrey')

@@ -1,6 +1,11 @@
 
 from matplotlib.colors import LinearSegmentedColormap
 from util import Utilitarios
+from shared_utils import (
+	create_jet_colormap, interpolate_grid, dict_list_append,
+	organize_cmn_data, collect_plot_data_vtec,
+	compute_colorbar_levels, cleanup_matplotlib,
+)
 import os, copy, queue
 import matplotlib.pyplot as plt
 from cartopy.crs import PlateCarree
@@ -95,16 +100,7 @@ class COMP_GRADE_MAPA(QDialog):
 				_es = es.lower()
 				self.nome_est[MAPA_dia_date].append(_es)
 				self.list_prn[MAPA_dia_date].append(prns_cmn)
-				self.dados_organizados[MAPA_dia_date][_es] = {}
-				for prn in prns_cmn:
-					str_prn = str(prn)
-					self.dados_organizados[MAPA_dia_date][_es][str_prn] = {}
-					for hora in dado_cmn[str_prn + ".time"]:
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora] = {}
-						ind = dado_cmn[str_prn + ".time"].index(hora)
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lon'] = dado_cmn[str_prn + ".lon"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lat'] = dado_cmn[str_prn + ".lat"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['vtec'] = dado_cmn[str_prn + ".vtec"][ind]
+				organize_cmn_data(dado_cmn, prns_cmn, self.dados_organizados, MAPA_dia_date, _es)
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_leitura)
 			q.task_done()
 		return
@@ -127,26 +123,7 @@ class COMP_GRADE_MAPA(QDialog):
 				q.task_done()
 				continue
 			_est,_prn =  work[1]
-			for prn in _prn:
-				str_prn = str(prn)
-				for hora in self.dados_organizados[MAPA_dia_date][_est][str_prn].keys():  
-					f_hora = hora
-					if not np.isnan(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['vtec']):
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".vtec"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['vtec'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".vtec"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".vtec"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['vtec'])
+			collect_plot_data_vtec(self.dados_organizados, self.dados_organizados_plot, MAPA_dia_date, _est, _prn)
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_processamento)
 			q.task_done()
 		return
@@ -186,16 +163,9 @@ class COMP_GRADE_MAPA(QDialog):
 		self._var_barra_progess.set(33.33)
 		self._var_barra_progess_label.set(self._dado_config.idioma(178))
 
-		CMAP_GRAFICO_MAPA_VTEC = copy.copy(cm.get_cmap("jet"))
-		CMAP_GRAFICO_MAPA_VTEC.set_under("white")
-		CMAP_GRAFICO_MAPA_VTEC.set_over("darkred")
+		CMAP_GRAFICO_MAPA_VTEC = create_jet_colormap()
 
-		_ticks_cbar = self._dado_config.Settings["PAINEL MAPA"]["iTicksCbar_VTEC"]
-		_ticks_divisao = self._dado_config.Settings["PAINEL MAPA"]["iDivTicks_VTEC"]
-		_vm_max = self._dado_config.Settings["PAINEL MAPA"]["fValueMax_B_VTEC"]
-		_vm_min = self._dado_config.Settings["PAINEL MAPA"]["fValueMin_B_VTEC"]
-		levels = np.linspace(_vm_min,_vm_max,int(_ticks_cbar + ((_ticks_cbar-1)*(_ticks_divisao-1))))
-		ticks = np.linspace(_vm_min,_vm_max,int(_ticks_cbar))
+		levels, ticks, _vm_min, _vm_max = compute_colorbar_levels(self._dado_config.Settings, "PAINEL MAPA", "VTEC")
 
 
 		
@@ -260,17 +230,7 @@ class COMP_GRADE_MAPA(QDialog):
 				AXE.grid('on')
 				#Fim 
 				x, y, z = np.array(self.dados_organizados_plot[data.date()][f_hora+'.lon']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.lat']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.vtec']) 
-				xi = np.linspace(x.min(), x.max(), self.numcols)
-				yi = np.linspace(y.min(), y.max(), self.numrows)
-				xi, yi = np.meshgrid(xi, yi)
-				zi = griddata((x, y), z,(xi, yi), method = 'linear')
-				x = np.arange(0, zi.shape[1])
-				y = np.arange(0, zi.shape[0])
-				zi = np.ma.masked_invalid(zi)
-				x1 = xi[~zi.mask]
-				y1 = yi[~zi.mask]
-				newarr = zi[~zi.mask]
-				GD1 = griddata((x1, y1), newarr.ravel(),(xi, yi),method='linear')
+				xi, yi, GD1 = interpolate_grid(x, y, z, self.numcols, self.numrows)
 				COLOR_SET = AXE.contourf(
 					xi,yi,GD1,
 					cmap = CMAP_GRAFICO_MAPA_VTEC, 
@@ -306,10 +266,7 @@ class COMP_GRADE_MAPA(QDialog):
 		# self.fig.savefig(camff, bbox_inches = 'tight', pad_inches = 0)
 		self.fig.set_size_inches(self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_width"], self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_height"])
 		self.fig.savefig(camff, dpi=self.fig.dpi)
-		plt.figure().clear()
-		plt.close()
-		plt.cla()
-		plt.clf()
+		cleanup_matplotlib()
 		self._var_barra_progess_label.set("Figura - "+camff+" gerada")
 		self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_plot)
 		self._var_barra_progess.set(100)
@@ -347,16 +304,7 @@ class COMP_GRADE_MAPA(QDialog):
 				_es = es.lower()
 				self.nome_est[MAPA_dia_date].append(_es)
 				self.list_prn[MAPA_dia_date].append(prns_cmn)
-				self.dados_organizados[MAPA_dia_date][_es] = {}
-				for prn in prns_cmn:
-					str_prn = str(prn)
-					self.dados_organizados[MAPA_dia_date][_es][str_prn] = {}
-					for hora in dado_cmn[str_prn + ".time"]:
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora] = {}
-						ind = dado_cmn[str_prn + ".time"].index(hora)
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lon'] = dado_cmn[str_prn + ".lon"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lat'] = dado_cmn[str_prn + ".lat"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['vtec'] = dado_cmn[str_prn + ".vtec"][ind]
+				organize_cmn_data(dado_cmn, prns_cmn, self.dados_organizados, MAPA_dia_date, _es)
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_leitura)
 			q.task_done()
 		return 
@@ -384,21 +332,10 @@ class COMP_GRADE_MAPA(QDialog):
 				for hora in self.dados_organizados[MAPA_dia_date][_est][str_prn].keys():  
 					f_hora = hora
 					if not np.isnan(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['rot']):
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".rot"].append(abs(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['rot']))
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".rot"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".rot"].append(abs(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['rot']))
+						entry = self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".lat", entry['lat'])
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".lon", entry['lon'])
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".rot", abs(entry['rot']))
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_processamento)
 			q.task_done()
 		return 
@@ -440,12 +377,7 @@ class COMP_GRADE_MAPA(QDialog):
 		# CMAP_GRAFICO_MAPA_ROT.set_under("darkred")
 		# CMAP_GRAFICO_MAPA_ROT.set_over("darkred")
 		
-		_ticks_cbar = self._dado_config.Settings["PAINEL MAPA"]["iTicksCbar_ROT"]
-		_ticks_divisao = self._dado_config.Settings["PAINEL MAPA"]["iDivTicks_ROT"]
-		_vm_max = self._dado_config.Settings["PAINEL MAPA"]["fValueMax_B_ROT"]
-		_vm_min = self._dado_config.Settings["PAINEL MAPA"]["fValueMin_B_ROT"]
-		levels = np.linspace(_vm_min,_vm_max,int(_ticks_cbar + ((_ticks_cbar-1)*(_ticks_divisao-1))))
-		ticks = np.linspace(_vm_min,_vm_max,int(_ticks_cbar))
+		levels, ticks, _vm_min, _vm_max = compute_colorbar_levels(self._dado_config.Settings, "PAINEL MAPA", "ROT")
 
 
 
@@ -503,17 +435,7 @@ class COMP_GRADE_MAPA(QDialog):
 				AXE.grid('on')
 				#Fim 
 				x, y, z = np.array(self.dados_organizados_plot[data.date()][f_hora+'.lon']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.lat']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.rot']) 
-				xi = np.linspace(x.min(), x.max(), self.numcols)
-				yi = np.linspace(y.min(), y.max(), self.numrows)
-				xi, yi = np.meshgrid(xi, yi)
-				zi = griddata((x, y), z,(xi, yi), method = 'linear')
-				x = np.arange(0, zi.shape[1])
-				y = np.arange(0, zi.shape[0])
-				zi = np.ma.masked_invalid(zi)
-				x1 = xi[~zi.mask]
-				y1 = yi[~zi.mask]
-				newarr = zi[~zi.mask]
-				GD1 = griddata((x1, y1), newarr.ravel(),(xi, yi),method='linear')
+				xi, yi, GD1 = interpolate_grid(x, y, z, self.numcols, self.numrows)
 				COLOR_SET = AXE.contourf(
 					xi,yi,GD1,
 					cmap = CMAP_GRAFICO_MAPA_ROT, 
@@ -542,10 +464,7 @@ class COMP_GRADE_MAPA(QDialog):
 		camff = (("%s\\%s\\PAINEL_ROT_(%s_%s).png")%(self._filedir,self.pasta[data.date()],data_inicio,data_fim))
 		self.fig.set_size_inches(self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_width"], self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_height"])
 		self.fig.savefig(camff, dpi=self.fig.dpi)
-		plt.figure().clear()
-		plt.close()
-		plt.cla()
-		plt.clf()
+		cleanup_matplotlib()
 		self._var_barra_progess_label.set("Figura - "+camff+" gerada")
 		self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_plot)
 		self._var_barra_progess.set(100)
@@ -584,16 +503,7 @@ class COMP_GRADE_MAPA(QDialog):
 				_es = es.lower()
 				self.nome_est[MAPA_dia_date].append(_es)
 				self.list_prn[MAPA_dia_date].append(prns_cmn)
-				self.dados_organizados[MAPA_dia_date][_es] = {}
-				for prn in prns_cmn:
-					str_prn = str(prn)
-					self.dados_organizados[MAPA_dia_date][_es][str_prn] = {}
-					for hora in dado_cmn[str_prn + ".time"]:
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora] = {}
-						ind = dado_cmn[str_prn + ".time"].index(hora)
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lon'] = dado_cmn[str_prn + ".lon"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['lat'] = dado_cmn[str_prn + ".lat"][ind]
-						self.dados_organizados[MAPA_dia_date][_es][str_prn][hora]['vtec'] = dado_cmn[str_prn + ".vtec"][ind]
+				organize_cmn_data(dado_cmn, prns_cmn, self.dados_organizados, MAPA_dia_date, _es)
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_leitura)
 			q.task_done()
 		return 
@@ -622,21 +532,10 @@ class COMP_GRADE_MAPA(QDialog):
 				for hora in self.dados_organizados[MAPA_dia_date][_est][str_prn].keys():  
 					f_hora = hora
 					if not np.isnan(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['roti']):
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lat"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lat'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".lon"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['lon'])
-						try:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".roti"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['roti'])
-						except KeyError:
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".roti"] = []
-							self.dados_organizados_plot[MAPA_dia_date][f_hora+".roti"].append(self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]['roti'])
+						entry = self.dados_organizados[MAPA_dia_date][_est][str_prn][f_hora]
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".lat", entry['lat'])
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".lon", entry['lon'])
+						dict_list_append(self.dados_organizados_plot[MAPA_dia_date], f_hora+".roti", entry['roti'])
 			self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_processamento)
 			q.task_done()
 		return 
@@ -675,16 +574,9 @@ class COMP_GRADE_MAPA(QDialog):
 		
 		# CMAP_GRAFICO_MAPA_ROTI = LinearSegmentedColormap.from_list("my_list", ['white','blue','aqua','yellow','red','darkred'], N=100)
 
-		CMAP_GRAFICO_MAPA_ROTI = copy.copy(cm.get_cmap("jet"))
-		CMAP_GRAFICO_MAPA_ROTI.set_under("white")
-		CMAP_GRAFICO_MAPA_ROTI.set_over("darkred")
+		CMAP_GRAFICO_MAPA_ROTI = create_jet_colormap()
 
-		_ticks_cbar = self._dado_config.Settings["PAINEL MAPA"]["iTicksCbar_ROTI"]
-		_ticks_divisao = self._dado_config.Settings["PAINEL MAPA"]["iDivTicks_ROTI"]
-		_vm_max = self._dado_config.Settings["PAINEL MAPA"]["fValueMax_B_ROTI"]
-		_vm_min = self._dado_config.Settings["PAINEL MAPA"]["fValueMin_B_ROTI"]
-		levels = np.linspace(_vm_min,_vm_max,int(_ticks_cbar + ((_ticks_cbar-1)*(_ticks_divisao-1))))
-		ticks = np.linspace(_vm_min,_vm_max,int(_ticks_cbar))
+		levels, ticks, _vm_min, _vm_max = compute_colorbar_levels(self._dado_config.Settings, "PAINEL MAPA", "ROTI")
 
 
 
@@ -738,17 +630,7 @@ class COMP_GRADE_MAPA(QDialog):
 				AXE.grid('on')
 				#Fim 
 				x, y, z = np.array(self.dados_organizados_plot[data.date()][f_hora+'.lon']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.lat']), np.array(self.dados_organizados_plot[data.date()][f_hora+'.roti']) 
-				xi = np.linspace(x.min(), x.max(), self.numcols)
-				yi = np.linspace(y.min(), y.max(), self.numrows)
-				xi, yi = np.meshgrid(xi, yi)
-				zi = griddata((x, y), z,(xi, yi), method = 'linear')
-				x = np.arange(0, zi.shape[1])
-				y = np.arange(0, zi.shape[0])
-				zi = np.ma.masked_invalid(zi)
-				x1 = xi[~zi.mask]
-				y1 = yi[~zi.mask]
-				newarr = zi[~zi.mask]
-				GD1 = griddata((x1, y1), newarr.ravel(),(xi, yi),method='linear')
+				xi, yi, GD1 = interpolate_grid(x, y, z, self.numcols, self.numrows)
 				COLOR_SET = AXE.contourf(
 					xi,yi,GD1,
 					cmap = CMAP_GRAFICO_MAPA_ROTI, 
@@ -770,10 +652,7 @@ class COMP_GRADE_MAPA(QDialog):
 		camff = (("%s\\%s\\PAINEL_ROTI_(%s_%s).png")%(self._filedir,self.pasta[data.date()],data_inicio,data_fim))
 		self.fig.set_size_inches(self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_width"], self._dado_config.Settings["PAINEL MAPA"]["fSize_inches_fig_height"])
 		self.fig.savefig(camff, dpi=self.fig.dpi)
-		plt.figure().clear()
-		plt.close()
-		plt.cla()
-		plt.clf()
+		cleanup_matplotlib()
 
 		self._var_barra_progess_label.set("Figura - "+camff+" gerada")
 		self._var_barra_progess.set(self._var_barra_progess.get() + self.coef_loop_plot)

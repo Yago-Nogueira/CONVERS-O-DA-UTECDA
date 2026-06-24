@@ -6,6 +6,10 @@ from PyQt6.QtCore import Qt
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 from util import Utilitarios
+from shared_utils import (
+    apply_tick_params, configure_axis_locator, apply_axes_limits,
+    setup_tick_label_pickers, build_cmn_filepath,
+)
 import numpy as np
 import threading
 from matplotlib.ticker import AutoMinorLocator
@@ -65,7 +69,7 @@ class COMP_ROT(QDialog):
         intervalo_LEITURA_CMN = 30# segundos
         intervalo_LEITURA_CMN/=3600
         dia_ano = self._datafile.timetuple().tm_yday
-        caminho = (("%s\\%s%.3i-%s-%.2i-%.2i.Cmn") % (self._filedir,self._sigla_estacao,dia_ano,self._datafile.year,self._datafile.month,self._datafile.day))
+        caminho = build_cmn_filepath(self._filedir, self._sigla_estacao, self._datafile)
         self.list_prn,dado_cmn = self.uti.Leitura_CMN_DICT(destino = caminho, ele = self._dado_config.Settings["ROT"]["fElevation_Filter"])
         #print ('**********************************',self.dados,self._dado_config.Settings["ROT"]["sTitle_Y"], self._dado_config.Settings["ROT"]["fValueMultFactor_ROT"], self._coe_rot)
         self.dados_organizados = {};
@@ -116,23 +120,9 @@ class COMP_ROT(QDialog):
             self._axes.set_xlim(0,24)
             self._axes.set_ylim(0,17)
 
-            try:
-                if self._dado_config.Settings["ROT"]["fValue_Passo_Ticks_Y_temp"]:self._axes.yaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["ROT"]["fValue_Passo_Ticks_Y_temp"]/2))
-                elif self._dado_config.Settings["ROT"]["iValue_Num_Ticks_Y_temp"]:self._axes.yaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["ROT"]["iValue_Num_Ticks_Y_temp"]))
-                else:self._axes.yaxis.set_major_locator(ticker.LinearLocator(6))
-            except KeyError:self._axes.yaxis.set_major_locator(ticker.LinearLocator(6))
-            try:
-                if self._dado_config.Settings["ROT"]["fValue_Passo_Ticks_X_temp"]:self._axes.xaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["ROT"]["fValue_Passo_Ticks_X_temp"]))
-                elif self._dado_config.Settings["ROT"]["iValue_Num_Ticks_X_temp"]:self._axes.xaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["ROT"]["iValue_Num_Ticks_X_temp"]))
-                else:self._axes.xaxis.set_major_locator(ticker.LinearLocator(8))
-            except KeyError:self._axes.xaxis.set_major_locator(ticker.LinearLocator(8))
-            
-            try:
-                self._axes.set_xlim(self._dado_config.Settings["ROT"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["ROT"]["fValueMax_Axes_X_temp"])
-            except KeyError:pass
-            try:
-                self._axes.set_ylim(self._dado_config.Settings["ROT"]["fValueMin_Axes_Y_temp"]/2,self._dado_config.Settings["ROT"]["fValueMax_Axes_Y_temp"]/2)
-            except KeyError:pass
+            configure_axis_locator(self._axes.yaxis, self._dado_config.Settings, "ROT", "Y", ticker.LinearLocator(6))
+            configure_axis_locator(self._axes.xaxis, self._dado_config.Settings, "ROT", "X", ticker.LinearLocator(8))
+            apply_axes_limits(self._axes, self._dado_config.Settings, "ROT", y_scale=0.5)
 
 
 
@@ -179,22 +169,14 @@ class COMP_ROT(QDialog):
                     self.list_scatter.append(sc)
                     # self._axes.scatter(dados_organizados_plot[str_prn]['time'],dados_organizados_plot[str_prn]['rot'],linewidths = .1,label = ("PRN (%s)"%(prn)),c='blue',marker = '.')#, picker=on_picker)
 
-            for label in self._axes.get_xticklabels():  # make the xtick labels pickable
-                label.set_picker(True)
-                label.set_gid("ticks_x:ROT")
-            for label in self._axes.get_yticklabels():  # make the xtick labels pickable
-                label.set_picker(True)
-                label.set_gid("ticks_y:ROT")
+            setup_tick_label_pickers(self._axes, "ROT")
             
             # self._matplotlib_figure.canvas.mpl_connect('button_press_event', self.Func_event_button_mouse_press)
             # self._matplotlib_figure.canvas.mpl_connect('key_press_event', self.Func_event_key_press)
 
             self._matplotlib_figure.canvas.mpl_connect('motion_notify_event', self.thread_vis_info)
             # self._matplotlib_figure.canvas.mpl_connect('motion_notify_event', self.vis_info)
-            self._axes.tick_params(axis='x', which='minor', width=self._dado_config.Settings["ROT"]["fWidthTickMinor_X"],size=self._dado_config.Settings["ROT"]["fHeightTickMinor_X"])#,labelsize=tam_x))
-            self._axes.tick_params(axis='x', which='major', width=self._dado_config.Settings["ROT"]["fWidthTickMajor_X"],size=self._dado_config.Settings["ROT"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["ROT"]["fSizeLabelsTick_X"])
-            self._axes.tick_params(axis='y', which='minor', width=self._dado_config.Settings["ROT"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["ROT"]["fHeightTickMinor_Y"])#,labelsize=tam_y))
-            self._axes.tick_params(axis='y', which='major', width=self._dado_config.Settings["ROT"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["ROT"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["ROT"]["fSizeLabelsTick_Y"])
+            apply_tick_params(self._axes, self._dado_config.Settings, "ROT")
             self._axes.add_artist(self.ab_PRN_ROT)
         else:
             self._axes = None
