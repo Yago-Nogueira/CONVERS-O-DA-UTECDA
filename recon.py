@@ -1,4 +1,5 @@
 import math,os,shutil,time,sys,traceback
+import logging
 import matplotlib
 matplotlib.use('QtAgg')
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
@@ -588,8 +589,8 @@ class Principal():
 		if self.filedir:#!= None and self.accept:
 			try:
 				self.selecionar(self.filedir)
-			except FileNotFoundError :
-				pass
+			except FileNotFoundError as e:
+				logging.warning("check_fill: data directory not found: %s", e)
 
 	def check_est_setor_EIA(self):
 		try:

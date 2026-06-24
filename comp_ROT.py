@@ -7,6 +7,7 @@ import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 from util import Utilitarios
 import numpy as np
+import logging
 import threading
 from matplotlib.ticker import AutoMinorLocator
 
@@ -129,10 +130,12 @@ class COMP_ROT(QDialog):
             
             try:
                 self._axes.set_xlim(self._dado_config.Settings["ROT"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["ROT"]["fValueMax_Axes_X_temp"])
-            except KeyError:pass
+            except KeyError:
+                logging.debug("ROT: X-axis temp limits not configured, using defaults")
             try:
                 self._axes.set_ylim(self._dado_config.Settings["ROT"]["fValueMin_Axes_Y_temp"]/2,self._dado_config.Settings["ROT"]["fValueMax_Axes_Y_temp"]/2)
-            except KeyError:pass
+            except KeyError:
+                logging.debug("ROT: Y-axis temp limits not configured, using defaults")
 
 
 

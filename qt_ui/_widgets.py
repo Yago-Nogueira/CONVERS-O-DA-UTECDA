@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Callable
 
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -567,8 +568,8 @@ class Spinbox(BaseWidget):
             if value is not None:
                 try:
                     self._qt.setValue(int(value.get()))
-                except ValueError:
-                    pass
+                except (ValueError, TypeError) as e:
+                    logging.debug("Spinbox: could not set initial value from variable: %s", e)
                 value.add_observer(lambda: self._qt.setValue(int(value.get())) if str(value.get()).isdigit() else None)
 
 

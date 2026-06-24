@@ -27,6 +27,7 @@ import simplekml
 import cartopy
 import math
 import copy
+import logging
 import os
 import sys
 
@@ -875,28 +876,33 @@ class Main_UTECDA(QWidget):
             try:
                 self.List_Selection_Listbx_OBS_Station = list(self.Listbx_Stations_OBS.curselection())
                 self.List_Scatter_OBS_Station[Indice_Last_selection[0]].set_facecolors('green')
-            except IndexError:pass
+            except IndexError:
+                logging.debug("Selecionar_Station_MAPA_MULTIPLE: scatter index out of range for selection")
             self.Cont_Station_Selecionadas_Lista.set(self.Cont_Station_Selecionadas_Lista.get()+1)
         else:
             Indice_Last_selection = list(set(self.List_Selection_Listbx_OBS_Station) -  set(self.Listbx_Stations_OBS.curselection()))
             try:
                 self.List_Selection_Listbx_OBS_Station = list(self.Listbx_Stations_OBS.curselection())
                 self.List_Scatter_OBS_Station[Indice_Last_selection[0]].set_facecolors('red')
-            except IndexError:pass
+            except IndexError:
+                logging.debug("Selecionar_Station_MAPA_MULTIPLE: scatter index out of range for deselection")
             self.Cont_Station_Selecionadas_Lista.set(self.Cont_Station_Selecionadas_Lista.get()-1)
         try:self.UPDATE_Artist(self.List_Scatter_OBS_Station[Indice_Last_selection[0]])
-        except IndexError:pass
+        except IndexError:
+            logging.debug("Selecionar_Station_MAPA_MULTIPLE: no artist to update at index")
     
     def Selecionar_Station_MAPA_SINGLE(self, *event):
         try:
             self.List_Scatter_OBS_Station[self.List_Selection_Listbx_OBS_Station[0]].set_facecolors('red')
             self.UPDATE_Artist(self.List_Scatter_OBS_Station[self.List_Selection_Listbx_OBS_Station[0]])
-        except IndexError:pass
+        except IndexError:
+            logging.debug("Selecionar_Station_MAPA_SINGLE: no previous selection to deselect")
         self.List_Selection_Listbx_OBS_Station = list(self.Listbx_Stations_OBS.curselection())
         try:
             self.List_Scatter_OBS_Station[self.List_Selection_Listbx_OBS_Station[0]].set_facecolors('green')
             self.UPDATE_Artist(self.List_Scatter_OBS_Station[self.List_Selection_Listbx_OBS_Station[0]])
-        except IndexError:pass
+        except IndexError:
+            logging.debug("Selecionar_Station_MAPA_SINGLE: no station to select")
         self.Cont_Station_Selecionadas_Lista.set(1)
 
     def Sel_Listbx_Stations_OBS(self,id_Station):
@@ -963,7 +969,8 @@ class Main_UTECDA(QWidget):
             try:
                 self.List_Scatter_OBS_Station[Index_Selection_Listbx_OBS_Station].set_facecolors('red')
                 self.UPDATE_Artist(self.List_Scatter_OBS_Station[Index_Selection_Listbx_OBS_Station])
-            except IndexError:pass
+            except IndexError:
+                logging.debug("Clear_SELECTION: station index %s out of range", Index_Selection_Listbx_OBS_Station)
         self.List_Selection_Listbx_OBS_Station = []
         self.Cont_Station_Selecionadas_Lista.set(0)
         self.Listbx_Stations_OBS.select_clear(0, END)
@@ -1008,8 +1015,8 @@ class Main_UTECDA(QWidget):
                     self.List_Scatter_OBS_Station.append(self.AXES_MAPA_PRINCIPAL.scatter(Lon_Station, Lat_Station, facecolor = 'red', picker = 2, s = 20, norm = 1, gid = "Station", zorder = 3, label = id_Station))
                     self.List_Annotate_OBS_Station.append(self.AXES_MAPA_PRINCIPAL.annotate(lista[0], (Lon_Station+.15, Lat_Station)))
                 self.CANVAS_MAPA_PRINCIPAL.draw()
-            except FileNotFoundError :
-                pass
+            except FileNotFoundError as e:
+                logging.warning("Aplicar_Filtro_Dir_station_OBS: station data directory not found: %s", e)
 
     def Atualizar_DIP_Listabx_Station_OBS(self, Fano=False, *event):
         ANO_DIP_STATIONS_OBS = self.calendario_modelo_grafico_INDIVIDUAL.get_date().year
@@ -1179,7 +1186,8 @@ class Main_UTECDA(QWidget):
                 item_line = self.Listbx_Stations_OBS.get(iten_id).replace('(','').replace(')','').replace('\n','').replace(',','')
                 item_line = item_line.split(' ')
                 try:self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA.append([item_line[0],float(item_line[1]),float(item_line[2]),float(item_line[3])])
-                except ValueError:pass
+                except (ValueError, IndexError) as e:
+                    logging.warning("EIA station data parse error for line '%s': %s", item_line, e)
             self.GRAFICO_Eia = COMP_EIA(self.FIGURA_TOPLEVEL_GRAFICO,self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA,self.filedir.get(),self.data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA,self.data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA,self.Value_Lat_Dip_axes_Y.get(), self.Value_station_on_TICK.get(),self.Dado_config)
             self.GRAFICO_Eia._set_Matplotlib_grafico()
             self.FIGURA_TOPLEVEL_GRAFICO, self.AXES_TOPLEVEL_GRAFICO ,self.COLORBAR_TOPLEVEL_GRAFICO, self.TITULO_TOPLEVEL_GRAFICO ,self.Matriz_STD_DADOS_JANELA_TOPLEVEL_GRAFICO_EIA, self.EIXOG_JANELA_TOPLEVEL_GRAFICO_EIA = self.GRAFICO_Eia._get_Matplotlib_grafico_att()
@@ -1964,7 +1972,8 @@ class Main_UTECDA(QWidget):
                     self.Dado_config.Settings[INTERFACE]["fValueMax_B_VTEC"] = float(tick_bar_novo_vmax)
                     self.Dado_config.Settings[INTERFACE]["fValueMin_B_VTEC"] = float(tick_bar_novo_vmin)
                     self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO(INTERFACE)
-            except ValueError:pass
+            except ValueError:
+                logging.info("Invalid VTEC bar value entered by user (non-numeric), ignoring")
 
         elif Evento == "tick_bar_graph_model":
             old_MAX_VALUE_BAR = self.Dado_config.Settings[self.plot_ATIVO]["fValueMax_B_%s"%GID_EVENT[2]]
@@ -2241,8 +2250,8 @@ class Main_UTECDA(QWidget):
         try:
             plt.close('all')
             self.master.destroy()
-        except:
-            print('Não iniciou thread')
+        except (RuntimeError, AttributeError) as e:
+            logging.warning("Quit_Program: error closing plots: %s", e)
             self.master.destroy()
 
 

@@ -1,4 +1,5 @@
 import math,os,shutil,time,sys,traceback
+import logging
 import matplotlib
 matplotlib.use('QtAgg')
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
@@ -727,8 +728,8 @@ class Principal():
 				self.img.canvas.draw()
 				self.img.canvas.flush_events()
 			self.pick_axes()
-		except:
-			pass
+		except (AttributeError, RuntimeError) as e:
+			logging.debug("refreshCanvas: canvas not ready or drawing failed: %s", e)
 
 	def sel_map(self,event):
 		id = self.listaobs.curselection()
@@ -761,15 +762,15 @@ class Principal():
 			for event in events:
 				event.set_color('red')
 				self.update_scatter(event)
-		except:
-			pass
+		except (AttributeError, TypeError) as e:
+			logging.debug("un_sel: could not update scatter color: %s", e)
 
 	def in_sel(self,event):
 		try:
 			event.set_color('green')
 			self.update_scatter(event)
-		except:
-			pass
+		except (AttributeError, TypeError) as e:
+			logging.debug("in_sel: could not update scatter color: %s", e)
 	def modelo_mapa(self,*event):
 		self.la = self.ax_map.get_ylim()
 		self.lo = self.ax_map.get_xlim()
@@ -1787,7 +1788,8 @@ class Principal():
 			self.clear_list_and_plot()
 			try:
 				nt_lista,self.conteudo_lista = self.uti.Refresh_list_obs(self.filedir,int(self.Data_Entry.get()[-4:]),self.check_filter_v.get(),True)
-			except:
+			except (ValueError, TypeError, IndexError) as e:
+				logging.warning("Refresh_list_obs unpacking failed, falling back to index access: %s", e)
 				self.conteudo_lista = self.uti.Refresh_list_obs(self.filedir,int(self.Data_Entry.get()[-4:]),self.check_filter_v.get(),True)[0]
 				nt_lista = []
 			

@@ -8,6 +8,7 @@ from scipy import interpolate
 import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
 import matplotlib
 
 class COMP_EIA(QDialog):	
@@ -179,9 +180,11 @@ class COMP_EIA(QDialog):
 			except KeyError:self.axes.xaxis.set_major_locator(ticker.LinearLocator())
 
 			try:self.axes.set_xlim(self._dado_config.Settings["EIA"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["EIA"]["fValueMax_Axes_X_temp"])
-			except KeyError:pass
+			except KeyError:
+				logging.debug("EIA: X-axis temp limits not configured, using defaults")
 			try:self.axes.set_ylim(self._dado_config.Settings["EIA"]["fValueMin_Axes_Y_temp"],self._dado_config.Settings["EIA"]["fValueMax_Axes_Y_temp"])
-			except KeyError:pass
+			except KeyError:
+				logging.debug("EIA: Y-axis temp limits not configured, using defaults")
 			
 
 			self.axes.yaxis.set_major_formatter(ticker.FuncFormatter(self.major_formatterest))
