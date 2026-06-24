@@ -4,12 +4,12 @@ matplotlib.use('QtAgg')
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
 from datetime import date, datetime, timedelta
 # PyQt6 imports handled explicitly
-from qt_ui import Toplevel, messagebox, ttk
-from qt_ui.filedialog import askdirectory
+from pyqt_utils import Toplevel, messagebox, ttk
+from pyqt_utils.filedialog import askdirectory
 # import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 # import numpy as np
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.offsetbox import AnnotationBbox, TextArea
 from matplotlib.patches import Polygon
 from mpl_toolkits.basemap import Basemap
@@ -29,9 +29,9 @@ from gerardoric import Geradordeinclinacao
 from licença import getli
 from ordena import Ordena
 from qt_calendar import DateEntry
-from tkcalendar_Days import Calendar
+from calendar_widget import Calendar
 from util import DadoIdioma, Utilitarios, VerticalScrolledFrame, thread_with_trace
-# matplotlib.use('TkAgg')
+# matplotlib.use('QtAgg')
 # matplotlib.font_manager._rebuild()
 
 class Principal():
@@ -134,7 +134,7 @@ class Principal():
 		# try:
 		# 	self.uti.teste_licença()
 		# 	programas.entryconfig(self.Dado_config.idioma(8),state="normal")
-		# 	self.frameprincipal1.pack(  # CONVERT_PACKside='left',fill=BOTH)
+		# 	self.frameprincipal1.pack(side='left',fill=BOTH)
 		# except (IOError,IndexError):
 		# 	self.accept = False
 		# 	# if not os.path.exists(("%s/LOCS.dat")%(newpath)):
@@ -158,7 +158,7 @@ class Principal():
 
 
 		# self.frame_prop_inbut = Frame(self.tela_graf,bg='gray')
-		# self.frame_prop_inbut.pack(  # CONVERT_PACKside='top',fill='both')
+		# self.frame_prop_inbut.pack(side='top',fill='both')
 
 
 
@@ -170,8 +170,8 @@ class Principal():
 		# self.popup_graf.add_checkbutton(label=self.Dado_config.idioma(91),variable=self.varmatriz,command=self.save_matriz)
 		# self.popup_graf.add_separator()
 		# self.popup_graf.add_command(label=self.Dado_config.idioma(26), command=self.refreshCanvas)
-		# self.tela_graf.bind("<Configure>", self.state_refresh )  # CONVERT_BIND
-		# self.tela_graf.bind("<Button-3>", self.do_popup)  # CONVERT_BIND
+		# self.tela_graf.bind("<Configure>", self.state_refresh )
+		# self.tela_graf.bind("<Button-3>", self.do_popup)
 		# self.tela_graf.protocol("WM_DELETE_WINDOW",self.quit_graf)
 		# self.tela_graf.protocol("WM_SAVE_YOURSELF",lambda e: print('configure tela graf'))
 #####################|GRÁFICO DAS EST|#######################################################################################################################
@@ -182,10 +182,10 @@ class Principal():
 
 
 # 		self.img, self.img_axes = plt.subplots()
-# 		self.canvas_img = FigureCanvasTkAgg(self.img,self.tela_graf)
-# 		self.toolbar = NavigationToolbar2Tk(self.canvas_img, self.tela_graf)
-# 		self.canvas_img.get_tk_widget().pack(side="bottom", fill="both", expand=True)
-# 		self.canvas_img._tkcanvas.pack(  # CONVERT_PACKside="top", fill="both", expand=True)
+# 		self.canvas_img = FigureCanvasQTAgg(self.img,self.tela_graf)
+# 		self.toolbar = NavigationToolbar2QT(self.canvas_img, self.tela_graf)
+# 		self.canvas_img.get_widget().pack(side="bottom", fill="both", expand=True)
+# 		self.canvas_img._qt_canvas.pack(side="top", fill="both", expand=True)
 
 
 
@@ -208,7 +208,7 @@ class Principal():
 
 
 		# self.frame_loc = Frame(self.frameprincipal1.interior)
-		# self.frame_loc.pack(  # CONVERT_PACKside='top',fill='both')
+		# self.frame_loc.pack(side='top',fill='both')
 		# Label(self.frame_loc,width = 25, text = self.Dado_config.idioma(157),relief='ridge').pack(side='top',fill=X)
 		# self.cbg_loc_value = ""
 		# mp = self.Dado_config.getMapa()
@@ -217,61 +217,61 @@ class Principal():
 		# self.cbg_loc_value.set(mp)
 		# self.n_lista_loc = [ll[0] for ll in self.lista_loc]
 		# self.cbg_loc = ttk.Combobox(self.frame_loc,state='readonly',exportselection=False,textvariable=self.cbg_loc_value,values=self.n_lista_loc)
-		# self.cbg_loc.bind("<<ComboboxSelected>>",self.Set_map)  # CONVERT_BIND
-		# self.cbg_loc.pack(  # CONVERT_PACKside='top',fill='x')
+		# self.cbg_loc.bind("<<ComboboxSelected>>",self.Set_map)
+		# self.cbg_loc.pack(side='top',fill='x')
 		# self.dirstd = Button(self.frameprincipal1.interior, text=self.Dado_config.idioma(18),command=self.selecionar,relief='ridge')
-		# self.dirstd.pack(  # CONVERT_PACKside='top',fill='x')
+		# self.dirstd.pack(side='top',fill='x')
 		# self.dir_string = StringVar(self.janelaprincipal)
 		# self.lbl_dir = Label(self.frameprincipal1.interior,width = 25 ,anchor=E,textvariable = self.dir_string ,relief='ridge')
-		# self.lbl_dir.pack(  # CONVERT_PACKfill='x')
+		# self.lbl_dir.pack(fill='x')
 		# self.frame_filter = Frame(self.frameprincipal1.interior,relief='ridge',bd=2)
-		# self.frame_filter.pack(  # CONVERT_PACKside='top',fill='both',expand=True)
+		# self.frame_filter.pack(side='top',fill='both',expand=True)
 		# self.check_filter_v = BooleanVar(self.janelaprincipal)
 		# Label(self.frame_filter,text=self.Dado_config.idioma(166)).pack(side='left',fill='both',expand=True)
 		# self.check_filter = Checkbutton(self.frame_filter,variable=self.check_filter_v,relief='ridge',bd=2,width=5,command=self.check_fill)#,command=self.cal_SETOR_atua_est)
-		# self.check_filter.pack(  # CONVERT_PACK)
+		# self.check_filter.pack()
 		# self.frame_list = Frame(self.frameprincipal1.interior)
-		# self.frame_list.pack(  # CONVERT_PACKside='top',fill='both')
+		# self.frame_list.pack(side='top',fill='both')
 		# self.listaobs = Listbox(self.frame_list,exportselection=False,bd=2,relief='ridge',width=25,highlightthickness=0,selectmode="single",)
 		# self.listaobs.see(0)
-		# self.listaobs.pack(  # CONVERT_PACKside=LEFT,fill='both',expand=True)
+		# self.listaobs.pack(side=LEFT,fill='both',expand=True)
 
 
 
 
 		
 ######################################|Inserir items sem selecionar|####################################################################################
-		# self.listaobs.bind("<Return>", self.sel_map)  # CONVERT_BIND
-		# self.listaobs.bind("<Button-1>", self.sel_map)  # CONVERT_BIND
-		# self.listaobs.bind("<<ListboxSelect>>",self.sel_map)  # CONVERT_BIND
+		# self.listaobs.bind("<Return>", self.sel_map)
+		# self.listaobs.bind("<Button-1>", self.sel_map)
+		# self.listaobs.bind("<<ListboxSelect>>",self.sel_map)
 		# self.sb = Scrollbar(self.frame_list)
-		# self.sb.pack(  # CONVERT_PACKside='right',fill=Y)
+		# self.sb.pack(side='right',fill=Y)
 		# self.sb.configure(command=self.listaobs.yview)
 		# self.listaobs.configure(yscrollcommand=self.sb.set)
 		# self.frame_select_obs = Frame(self.frameprincipal1.interior)
-		# self.frame_select_obs.pack(  # CONVERT_PACKfill=X)
+		# self.frame_select_obs.pack(fill=X)
 		# self.cont_est_select = StringVar(self.janelaprincipal)
 		# self.cont_est_select.set('0')
 		# Label(self.frame_select_obs,textvariable = self.cont_est_select,relief='ridge').pack(side=LEFT,fill=BOTH,expand=True)
 		# Button(self.frame_select_obs,text=self.Dado_config.idioma(113),relief='ridge',command=self.clear_list_and_plot).pack(side='right',fill=BOTH,expand=True)
 		# self.cbg_value = ""
 		# self.cbg = ttk.Combobox(self.frameprincipal1.interior,state='disabled',exportselection=False,textvariable=self.cbg_value,values=['Individual (STD)','Setor (STD)','EIA (STD)','Desvio (STD)','Mapa (CMN)','ROT (CMN)'])#'Mapa (CMN)'
-		# self.cbg.bind("<<ComboboxSelected>>",self.Set_menu_rap)  # CONVERT_BIND
-		# self.cbg.pack(  # CONVERT_PACKside='top',fill=X)
+		# self.cbg.bind("<<ComboboxSelected>>",self.Set_menu_rap)
+		# self.cbg.pack(side='top',fill=X)
 		# self.frameprincipal2 = Frame(janelaprincipal)
-		# self.frameprincipal2.pack(  # CONVERT_PACKfill=BOTH,side='right',expand=True)
+		# self.frameprincipal2.pack(fill=BOTH,side='right',expand=True)
 #####################|FIM p1|#######################################################################################################################
-		# self.cal.bind('<<DateEntrySelected>>',self.atuaAno)  # CONVERT_BIND
+		# self.cal.bind('<<DateEntrySelected>>',self.atuaAno)
 # #####################|INDV|#######################################################################################################################
 # 		self.Frame_prop_rap_INDV = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		Label(self.Frame_prop_rap_INDV,text=self.Dado_config.idioma(53)).pack(fill=X)
 # 		self.cal_INDV = DateEntry(self.Frame_prop_rap_INDV, textvariable = self.Data_Entry,background='darkblue',foreground='white', borderwidth=2)#, year = 2017,day=1,month=9)
-# 		self.cal_INDV.bind('<<DateEntrySelected>>', self.atualizar_dip)#lambda e=1:self.plot_linha_eq_mag(datetime.strptime(self.cal_INDV.get(), '%d/%m/%Y').year))  # CONVERT_BIND
-# 		self.cal_INDV.pack(  # CONVERT_PACKfill='x')
+# 		self.cal_INDV.bind('<<DateEntrySelected>>', self.atualizar_dip)#lambda e=1:self.plot_linha_eq_mag(datetime.strptime(self.cal_INDV.get(), '%d/%m/%Y').year))
+# 		self.cal_INDV.pack(fill='x')
 # 		Label(self.Frame_prop_rap_INDV,text=self.Dado_config.idioma(54)).pack(fill='x')
 # 		self.Data_Entry_INDV2 = StringVar(janelaprincipal)
 # 		self.cal2_INDV = DateEntry(self.Frame_prop_rap_INDV,textvariable=self.Data_Entry_INDV2,background='darkblue',foreground='white', borderwidth=2)#,year =2017,day=30,month=9)
-# 		self.cal2_INDV.pack(  # CONVERT_PACKfill='x')
+# 		self.cal2_INDV.pack(fill='x')
 # 		Label(self.Frame_prop_rap_INDV,text=self.Dado_config.idioma(130),relief=GROOVE).pack(fill=X)
 # 		self.DateFormat_INDV = IntVar(self.janelaprincipal)
 # 		self.DateFormat_INDV.set(1)
@@ -283,47 +283,47 @@ class Principal():
 # #####################|SETOR|#######################################################################################################################
 # 		self.Frame_prop_rap_SETOR = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		self.Frame_prop_rap_SETOR_Entry = Frame(self.Frame_prop_rap_SETOR,bg='gray')
-# 		self.Frame_prop_rap_SETOR_Entry.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_SETOR_Entry.pack(fill=X)
 # 		Label(self.Frame_prop_rap_SETOR_Entry,text=self.Dado_config.idioma(107)).pack(fill=X)
 # 		self.cal_SETOR = DateEntry(self.Frame_prop_rap_SETOR_Entry,textvariable = self.Data_Entry,background='darkblue',foreground='white', borderwidth=2)#,year = 2017,day=1,month=9)
-# 		self.cal_SETOR.bind('<<DateEntrySelected>>',self.atualizar_dip)  # CONVERT_BIND
-# 		self.cal_SETOR.pack(  # CONVERT_PACKfill=X)
+# 		self.cal_SETOR.bind('<<DateEntrySelected>>',self.atualizar_dip)
+# 		self.cal_SETOR.pack(fill=X)
 # 		self.Frame_prop_rap_SETOR_Check = Frame(self.Frame_prop_rap_SETOR,bg='gray')
-# 		self.Frame_prop_rap_SETOR_Check.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_SETOR_Check.pack(fill=X)
 # 		self.cal_SETOR_EIA_varest = BooleanVar(self.janelaprincipal)
 # 		self.cal_SETOR_lblest = Label(self.Frame_prop_rap_SETOR_Check,text=self.Dado_config.idioma(109),relief=GROOVE)
-# 		self.cal_SETOR_lblest.pack(  # CONVERT_PACKside='left',fill=BOTH,expand=True)
+# 		self.cal_SETOR_lblest.pack(side='left',fill=BOTH,expand=True)
 # 		self.cal_SETOR_checkest = Checkbutton(self.Frame_prop_rap_SETOR_Check,variable=self.cal_SETOR_EIA_varest,width=5,command=self.check_est_setor_EIA)#,command=self.cal_SETOR_atua_est)
-# 		self.cal_SETOR_checkest.pack(  # CONVERT_PACKside='right')
+# 		self.cal_SETOR_checkest.pack(side='right')
 # 		self.Frame_prop_rap_SETOR_eixoY = Frame(self.Frame_prop_rap_SETOR,bg='gray',relief=GROOVE)
-# 		self.Frame_prop_rap_SETOR_eixoY.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_SETOR_eixoY.pack(fill=X)
 # 		self.varaxixY = IntVar(self.janelaprincipal)
 # 		self.varaxixY.set(1)
 # 		Label(self.Frame_prop_rap_SETOR_eixoY,text=self.Dado_config.idioma(120),relief=GROOVE).pack(fill=X)
 # 		Radiobutton(self.Frame_prop_rap_SETOR_eixoY,variable=self.varaxixY,value=0,text='Latitude',relief=GROOVE,command=self.radio_dip_setor_EIA).pack(side='right',fill=X,expand=1)
 # 		Radiobutton(self.Frame_prop_rap_SETOR_eixoY,variable=self.varaxixY,value=1,text='Dip.Lat',relief=GROOVE,command=self.radio_dip_setor_EIA).pack(side='left',fill=X,expand=1)
 # 		self.Frame_prop_rap_SETOR_btn = Frame(self.Frame_prop_rap_SETOR,bg='gray',relief=GROOVE)
-# 		self.Frame_prop_rap_SETOR_btn.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_SETOR_btn.pack(fill=X)
 # 		Button(self.Frame_prop_rap_SETOR_btn,text=self.Dado_config.idioma(108),relief='ridge',command = self.plot).pack(fill=X)
 # #####################|SETOR |#######################################################################################################################
 # #####################|DESVIO|#######################################################################################################################
 # 		self.Frame_prop_rap_DESVIO = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos = Frame(self.Frame_prop_rap_DESVIO,bd=3,relief=GROOVE)
-# 		self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos.pack(  # CONVERT_PACKfill='both')
+# 		self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos.pack(fill='both')
 # 		Label(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,text=self.Dado_config.idioma(123)).pack(fill=X,side="top")
 # 		self.Cal_Calm_days = Calendar(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos, width=10, font="Arial 10", selectmode='day',cursor="hand2",Locator=self.Dado_config.idioma(0),year = date.today().year,month=date.today().month)
-# 		self.Cal_Calm_days.pack(  # CONVERT_PACKfill="both", expand=True)
+# 		self.Cal_Calm_days.pack(fill="both", expand=True)
 # 		Label(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,text=self.Dado_config.idioma(124),relief='ridge').pack(fill=X)
 # 		Label(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,text=self.Dado_config.idioma(53)).pack(fill=X)
 # 		self.cal_in_DESVIO = DateEntry(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,textvariable = self.Data_Entry, background='darkblue',foreground='white', borderwidth=1)#,year = 2017,day=26,month=9)
-# 		self.cal_in_DESVIO.bind('<<DateEntrySelected>>',self.atualizar_dip)  # CONVERT_BIND
-# 		self.cal_in_DESVIO.pack(  # CONVERT_PACKfill='both',expand = True)
+# 		self.cal_in_DESVIO.bind('<<DateEntrySelected>>',self.atualizar_dip)
+# 		self.cal_in_DESVIO.pack(fill='both',expand = True)
 # 		Label(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,text=self.Dado_config.idioma(54)).pack(fill=X)
 # 		self.Data_Entry_DESVIO2 = StringVar(janelaprincipal)
 # 		self.cal_fi_DESVIO = DateEntry(self.Frame_prop_rap_DESVIO_Sel_Dias_Calmos,textvariable= self.Data_Entry_DESVIO2, background='darkblue',foreground='white', borderwidth=1)#,year = 2017,day=30,month=9)
-# 		self.cal_fi_DESVIO.pack(  # CONVERT_PACKfill='both',expand = True)
+# 		self.cal_fi_DESVIO.pack(fill='both',expand = True)
 # 		self.Frame_prop_rap_DESVIO_prop = Frame(self.Frame_prop_rap_DESVIO,bd=3,bg='gray',relief=GROOVE)
-# 		self.Frame_prop_rap_DESVIO_prop.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_DESVIO_prop.pack(fill=X)
 # 		self.frame_prop_it = []
 # 		for rowit in range(4):
 # 			self.frame_prop_it.append(Frame(self.Frame_prop_rap_DESVIO_prop,bd=3,relief=GROOVE))
@@ -347,39 +347,39 @@ class Principal():
 # #####################|MAPA|#########################################################################################################################
 # 		self.Frame_prop_rap_MAPA = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		self.Frame_prop_rap_MAPA_Entry = Frame(self.Frame_prop_rap_MAPA,bg='gray')
-# 		self.Frame_prop_rap_MAPA_Entry.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_MAPA_Entry.pack(fill=X)
 
 # 		Label(self.Frame_prop_rap_MAPA_Entry,text=self.Dado_config.idioma(107)).pack(fill=X)
 # 		self.cal_MAPA = DateEntry(self.Frame_prop_rap_MAPA_Entry,textvariable = self.Data_Entry,background='darkblue',foreground='white', borderwidth=2)#,year = 2017,day=1,month=9)
-# 		self.cal_MAPA.bind('<<DateEntrySelected>>',self.atualizar_dip)  # CONVERT_BIND
-# 		self.cal_MAPA.pack(  # CONVERT_PACKfill=X)
+# 		self.cal_MAPA.bind('<<DateEntrySelected>>',self.atualizar_dip)
+# 		self.cal_MAPA.pack(fill=X)
 
 
 # 		self.Frame_prop_rap_MAPA_H_INICIO = Frame(self.Frame_prop_rap_MAPA,bg='gray')
-# 		self.Frame_prop_rap_MAPA_H_INICIO.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_MAPA_H_INICIO.pack(fill=X)
 # 		Label(self.Frame_prop_rap_MAPA_H_INICIO,text=self.Dado_config.idioma(172),relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		vcmd = (self.janelaprincipal.register(self.uti.onValidatesigla),'%S', '%s','%d',2,4)
 # 		self.MAPA_Time_INICIO = Entry(self.Frame_prop_rap_MAPA_H_INICIO,width=10,validate="key",validatecommand=vcmd,bd=2)
 # 		self.MAPA_Time_INICIO.insert(END,'0')
-# 		self.MAPA_Time_INICIO.pack(  # CONVERT_PACKside='right',fill='both')
+# 		self.MAPA_Time_INICIO.pack(side='right',fill='both')
 
 
 # 		self.Frame_prop_rap_MAPA_H_FIM = Frame(self.Frame_prop_rap_MAPA,bg='gray')
-# 		self.Frame_prop_rap_MAPA_H_FIM.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_MAPA_H_FIM.pack(fill=X)
 # 		Label(self.Frame_prop_rap_MAPA_H_FIM,text=self.Dado_config.idioma(173),relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		vcmd = (self.janelaprincipal.register(self.uti.onValidatesigla),'%S', '%s','%d',2,4)
 # 		self.MAPA_Time_FIM = Entry(self.Frame_prop_rap_MAPA_H_FIM,width=10,validate="key",validatecommand=vcmd,bd=2)
 # 		self.MAPA_Time_FIM.insert(END,'24')
-# 		self.MAPA_Time_FIM.pack(  # CONVERT_PACKside='right',fill='both')
+# 		self.MAPA_Time_FIM.pack(side='right',fill='both')
 
 
 # 		self.Frame_prop_rap_MAPA_D_TIME = Frame(self.Frame_prop_rap_MAPA,bg='gray')
-# 		self.Frame_prop_rap_MAPA_D_TIME.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_MAPA_D_TIME.pack(fill=X)
 # 		Label(self.Frame_prop_rap_MAPA_D_TIME,text=self.Dado_config.idioma(174),relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		vcmd = (self.janelaprincipal.register(self.uti.onValidatesigla),'%S', '%s','%d',2,4)
 # 		self.MAPA_Delta_Time = Entry(self.Frame_prop_rap_MAPA_D_TIME,width=10,validate="key",validatecommand=vcmd,bd=2)
 # 		self.MAPA_Delta_Time.insert(END,'1')
-# 		self.MAPA_Delta_Time.pack(  # CONVERT_PACKside='right',fill='both')
+# 		self.MAPA_Delta_Time.pack(side='right',fill='both')
 
 
 
@@ -393,60 +393,60 @@ class Principal():
 # #####################|ROT|#######################################################################################################################
 # 		self.Frame_prop_rap_ROT = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		self.Frame_prop_rap_ROT_Entry = Frame(self.Frame_prop_rap_ROT,bg='gray')
-# 		self.Frame_prop_rap_ROT_Entry.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_ROT_Entry.pack(fill=X)
 # 		Label(self.Frame_prop_rap_ROT_Entry,text=self.Dado_config.idioma(107)).pack(fill=X)
 # 		self.cal_ROT = DateEntry(self.Frame_prop_rap_ROT_Entry,textvariable = self.Data_Entry,background='darkblue',foreground='white', borderwidth=2)#,year = 2017,day=1,month=9)
-# 		self.cal_ROT.bind('<<DateEntrySelected>>',self.atualizar_dip)  # CONVERT_BIND
-# 		self.cal_ROT.pack(  # CONVERT_PACKfill=X)
+# 		self.cal_ROT.bind('<<DateEntrySelected>>',self.atualizar_dip)
+# 		self.cal_ROT.pack(fill=X)
 # 		self.Frame_prop_rap_ROT_Check = Frame(self.Frame_prop_rap_ROT,bg='gray')
-# 		self.Frame_prop_rap_ROT_Check.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_ROT_Check.pack(fill=X)
 # 		self.ROT_varest = BooleanVar(self.janelaprincipal)
 # 		Label(self.Frame_prop_rap_ROT_Check,text=self.Dado_config.idioma(167),relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		Checkbutton(self.Frame_prop_rap_ROT_Check,relief=GROOVE,command = self.set_cores_ROT,variable=self.ROT_varest,width=5).pack(side='right')
 # 		self.Frame_prop_rap_ROT_Check_Legend = Frame(self.Frame_prop_rap_ROT,bg='gray')
-# 		self.Frame_prop_rap_ROT_Check_Legend.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_ROT_Check_Legend.pack(fill=X)
 # 		Label(self.Frame_prop_rap_ROT_Check_Legend,text=self.Dado_config.idioma(134),relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		Checkbutton(self.Frame_prop_rap_ROT_Check_Legend,relief=GROOVE,command=self.setar_legends,variable=self.Legend,width=5).pack(side='right')
 # 		self.Frame_prop_rap_ROT_D_TIME = Frame(self.Frame_prop_rap_ROT,bg='gray')
-# 		self.Frame_prop_rap_ROT_D_TIME.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_ROT_D_TIME.pack(fill=X)
 # 		Label(self.Frame_prop_rap_ROT_D_TIME,text='ΔT (Min)',relief=GROOVE).pack(side='left',fill=BOTH,expand=True)
 # 		vcmd = (self.janelaprincipal.register(self.uti.onValidatesigla),'%S', '%s','%d',2,4)
 # 		self.ROT_Delta_Time = Entry(self.Frame_prop_rap_ROT_D_TIME,width=10,validate="key",validatecommand=vcmd)
 # 		self.ROT_Delta_Time.insert(END,'1')
-# 		self.ROT_Delta_Time.pack(  # CONVERT_PACKside='right')
+# 		self.ROT_Delta_Time.pack(side='right')
 # 		# Button(self.Frame_prop_rap_ROT,text=self.Dado_config.idioma(108),relief='ridge',command = self.plot).pack(fill=X)
 # #####################|ROT|#######################################################################################################################
 # #####################|EIA|#######################################################################################################################
 # 		self.Frame_prop_rap_EIA = Frame(self.frameprincipal1.interior,bd=3,bg='gray',relief=GROOVE)
 # 		self.Frame_prop_rap_EIA_Entry = Frame(self.Frame_prop_rap_EIA,bg='gray')
-# 		self.Frame_prop_rap_EIA_Entry.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_EIA_Entry.pack(fill=X)
 # 		Label(self.Frame_prop_rap_EIA,text=self.Dado_config.idioma(53)).pack(fill=X)
 # 		self.cal_EIA = DateEntry(self.Frame_prop_rap_EIA, textvariable = self.Data_Entry,background='darkblue',foreground='white', borderwidth=2)#, year = 2017,day=1,month=9)
-# 		self.cal_EIA.bind('<<DateEntrySelected>>', self.atualizar_dip)#lambda e=1:self.plot_linha_eq_mag(datetime.strptime(self.cal_EIA.get(), '%d/%m/%Y').year))  # CONVERT_BIND
-# 		self.cal_EIA.pack(  # CONVERT_PACKfill='x')
+# 		self.cal_EIA.bind('<<DateEntrySelected>>', self.atualizar_dip)#lambda e=1:self.plot_linha_eq_mag(datetime.strptime(self.cal_EIA.get(), '%d/%m/%Y').year))
+# 		self.cal_EIA.pack(fill='x')
 # 		Label(self.Frame_prop_rap_EIA,text=self.Dado_config.idioma(54)).pack(fill='x')
 # 		self.Data_Entry_EIA2 = StringVar(janelaprincipal)
 # 		self.cal2_EIA = DateEntry(self.Frame_prop_rap_EIA,textvariable=self.Data_Entry_EIA2,background='darkblue',foreground='white', borderwidth=2)#,year =2017,day=30,month=9)
-# 		self.cal2_EIA.pack(  # CONVERT_PACKfill='x')
+# 		self.cal2_EIA.pack(fill='x')
 # 		self.Frame_prop_rap_EIA_Check = Frame(self.Frame_prop_rap_EIA,bg='gray')
-# 		self.Frame_prop_rap_EIA_Check.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_EIA_Check.pack(fill=X)
 # 		self.cal_EIA_lblest = Label(self.Frame_prop_rap_EIA_Check,text=self.Dado_config.idioma(109),relief=GROOVE)
-# 		self.cal_EIA_lblest.pack(  # CONVERT_PACKside='left',fill=BOTH,expand=True)
+# 		self.cal_EIA_lblest.pack(side='left',fill=BOTH,expand=True)
 # 		self.cal_EIA_checkest = Checkbutton(self.Frame_prop_rap_EIA_Check,variable=self.cal_SETOR_EIA_varest,width=5,command=self.check_est_setor_EIA)#,command=self.cal_EIA_atua_est)
-# 		self.cal_EIA_checkest.pack(  # CONVERT_PACKside='right')
+# 		self.cal_EIA_checkest.pack(side='right')
 # 		self.Frame_prop_rap_EIA_eixoY = Frame(self.Frame_prop_rap_EIA,bg='gray',relief=GROOVE)
-# 		self.Frame_prop_rap_EIA_eixoY.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_EIA_eixoY.pack(fill=X)
 # 		self.varaxixY = IntVar(self.janelaprincipal)
 # 		self.varaxixY.set(1)
 # 		Label(self.Frame_prop_rap_EIA_eixoY,text=self.Dado_config.idioma(120),relief=GROOVE).pack(fill=X)
 # 		Radiobutton(self.Frame_prop_rap_EIA_eixoY,variable=self.varaxixY,value=0,text='Latitude',relief=GROOVE,command=self.radio_dip_setor_EIA).pack(side='right',fill=X,expand=1)
 # 		Radiobutton(self.Frame_prop_rap_EIA_eixoY,variable=self.varaxixY,value=1,text='Dip.Lat',relief=GROOVE,command=self.radio_dip_setor_EIA).pack(side='left',fill=X,expand=1)
 # 		self.Frame_prop_rap_EIA_btn = Frame(self.Frame_prop_rap_EIA,bg='gray',relief=GROOVE)
-# 		self.Frame_prop_rap_EIA_btn.pack(  # CONVERT_PACKfill=X)
+# 		self.Frame_prop_rap_EIA_btn.pack(fill=X)
 # 		Button(self.Frame_prop_rap_EIA_btn,text=self.Dado_config.idioma(108),relief='ridge',command = self.plot).pack(fill=X)
 # #####################|EIA|#######################################################################################################################
 		# self.Frame_prop_rap_DESVIO = Frame(self.frameprincipal1)
-		# self.Frame_prop_rap_.pack(  # CONVERT_PACKfill=BOTH,expand=True)
+		# self.Frame_prop_rap_.pack(fill=BOTH,expand=True)
 		# self.list_est_obs = []
 		# self.setar_est(fill=True)
 #####################|CRIAR MAPA DO  OBS|#######################################################################################################################
@@ -502,11 +502,11 @@ class Principal():
 # 		# self.map.fillcontinents(color='navajowhite',lake_color='aqua', zorder=2)
 # 		self.ax_map.set_ylim(int(self.la[0]),int(self.la[1]))
 # 		self.ax_map.set_xlim(int(self.lo[0]),int(self.lo[1]))
-# 		self.canvas_map = FigureCanvasTkAgg(self.fig_map,self.frameprincipal2)
-# 		self.canvas_map.get_tk_widget().pack(side='right',expand=True, fill=BOTH)
-# 		toolbar = NavigationToolbar2Tk(self.canvas_map, self.frameprincipal2)
+# 		self.canvas_map = FigureCanvasQTAgg(self.fig_map,self.frameprincipal2)
+# 		self.canvas_map.get_widget().pack(side='right',expand=True, fill=BOTH)
+# 		toolbar = NavigationToolbar2QT(self.canvas_map, self.frameprincipal2)
 # 		toolbar.update()
-# 		self.canvas_map._tkcanvas.pack(  # CONVERT_PACKside=TOP,expand=True, fill=BOTH)
+# 		self.canvas_map._qt_canvas.pack(side=TOP,expand=True, fill=BOTH)
 # ###################################|click_points|################################################################################
 # 		self.fig_map.canvas.mpl_connect('pick_event', self.on_click_map)
 ###################################|click_points|################################################################################
@@ -538,8 +538,8 @@ class Principal():
 		# 	if os.path.exists(Caminho):
 		# 		self.selecionar(Caminho,dip=False)
 ######################################|Inserir items sem selecionar|######################################
-		self.janelaprincipal.bind("<Return>",self.plot)  # CONVERT_BIND
-		self.janelaprincipal.protocol("WM_DELETE_WINDOW", self.quit)#lambda tk=root:self.uti.troca(tk,self.janelaprincipal,plt))
+		self.janelaprincipal.bind("<Return>",self.plot)
+		self.janelaprincipal.protocol("WM_DELETE_WINDOW", self.quit)#lambda parent=root: self.uti.troca(parent,self.janelaprincipal,plt))
 		self.janelaprincipal.mainloop()
 
 	def set_cores_ROT(self,*event):
@@ -555,8 +555,8 @@ class Principal():
 	def quit(self):
 		self.Dado_config.writeConfig()
 		plt.close('all')
-		self.canvas_img.get_tk_widget().destroy()
-		self.canvas_map.get_tk_widget().destroy()
+		self.canvas_img.get_widget().destroy()
+		self.canvas_map.get_widget().destroy()
 		self.tela_graf.destroy()
 		self.janelaprincipal.destroy()
 
@@ -735,11 +735,11 @@ class Principal():
 	# 		else:
 	# 			self.popup_graf.entryconfig(self.Dado_config.idioma(142),label=self.Dado_config.idioma(141))
 	# 	try:
-	# 		self.img_axes.xaxis.grid(  # CONVERT_GRIDself.vargrid_X.get())
+	# 		self.img_axes.xaxis.grid(self.vargrid_X.get())
 	# 	except (AttributeError,ValueError):
 	# 		for axe_i in np.array(self.img_axes).flatten():
-	# 			axe_i.xaxis.grid(  # CONVERT_GRIDself.vargrid_X.get())
-	# 			# axe_i.yaxis.grid(  # CONVERT_GRIDself.vargrid_Y.get())
+	# 			axe_i.xaxis.grid(self.vargrid_X.get())
+	# 			# axe_i.yaxis.grid(self.vargrid_Y.get())
 	# 	if refresh:self.refreshCanvas()
 
 	# def atua_grid_Y(self,verifi=None,refresh=True):
@@ -750,10 +750,10 @@ class Principal():
 	# 		else:
 	# 			self.popup_graf.entryconfig(self.Dado_config.idioma(140),label=self.Dado_config.idioma(139))
 	# 	try:
-	# 		self.img_axes.yaxis.grid(  # CONVERT_GRIDself.vargrid_Y.get())
+	# 		self.img_axes.yaxis.grid(self.vargrid_Y.get())
 	# 	except (AttributeError,ValueError):
 	# 		for axe_i in np.array(self.img_axes).flatten():
-	# 			axe_i.yaxis.grid(  # CONVERT_GRIDself.vargrid_Y.get())
+	# 			axe_i.yaxis.grid(self.vargrid_Y.get())
 	# 	if refresh:self.refreshCanvas()
 
 	# def plot_linha_eq_mag(self,ano,img=None):
@@ -1068,12 +1068,12 @@ class Principal():
 			elif self.tela_graf.state() == "normal":
 				try:
 					self.tela_graf.focus_force()
-				except TclError:
+				except Exception:
 					pass
 			self.refreshCanvas()
 			self.janelaprincipal.wait_window(self.janelaprincipal)
 			# self.tela_graf.lift()
-			# self.img.canvas.get_tk_widget().focus_force()
+			# self.img.canvas.get_widget().focus_force()
 			# self.raise_above_all(self.janelaprincipal)
 
 	# def plot_EIA(self,vm=50):
@@ -1824,33 +1824,33 @@ class Principal():
 
 	# 	if self.cbg_value.get() == "Individual (STD)":
 	# 		self.clear_list_and_plot()
-	# 		self.Frame_prop_rap_INDV.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_INDV.pack(fill='x')
 	# 		self.listaobs.config(selectmode="single")
 
 	# 	elif self.cbg_value.get() == "Setor (STD)":
 	# 		# self.clear_list_and_plot()
-	# 		self.Frame_prop_rap_SETOR.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_SETOR.pack(fill='x')
 	# 		self.listaobs.configure(selectmode="multiple")
 
 	# 	elif self.cbg_value.get() == "EIA (STD)":
 	# 		# self.clear_list_and_plot()
-	# 		self.Frame_prop_rap_EIA.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_EIA.pack(fill='x')
 	# 		self.listaobs.configure(selectmode="multiple")
 
 	# 	elif self.cbg_value.get() == "Desvio (STD)":
 	# 		# self.clear_list_and_plot()
-	# 		self.Frame_prop_rap_DESVIO.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_DESVIO.pack(fill='x')
 	# 		self.listaobs.configure(selectmode="multiple")
 
 	# 	elif self.cbg_value.get() == "Mapa (CMN)":
 	# 		self.clear_list_and_plot()
 	# 		self.listaobs.configure(selectmode="single")
-	# 		self.Frame_prop_rap_MAPA.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_MAPA.pack(fill='x')
 
 
 	# 	elif self.cbg_value.get() == "ROT (CMN)":
 	# 		self.clear_list_and_plot()
-	# 		self.Frame_prop_rap_ROT.pack(  # CONVERT_PACKfill='x')
+	# 		self.Frame_prop_rap_ROT.pack(fill='x')
 	# 		self.listaobs.config(selectmode="single")
 
 	# 	if len(self.listaobs.get(0).split(',')) == 2 and self.cbg_value.get():
@@ -1941,8 +1941,8 @@ class Principal():
 	# 			self.cbg.config(values=['Individual (STD)'])
 	# 			self.cbg.config(state='readonly')
 	# 			self.cbg_value.set("")
-	# 		self.janelaprincipal.bind("<Up>",lambda e: self.uti.up_lista(self.listaobs))  # CONVERT_BIND
-	# 		self.janelaprincipal.bind("<Down>",lambda e: self.uti.down_lista(self.listaobs))  # CONVERT_BIND
+	# 		self.janelaprincipal.bind("<Up>",lambda e: self.uti.up_lista(self.listaobs))
+	# 		self.janelaprincipal.bind("<Down>",lambda e: self.uti.down_lista(self.listaobs))
 	# 		self.Dado_config.setLocalSTD(self.filedir)
 	# 		self.fig_map.canvas.draw()
 

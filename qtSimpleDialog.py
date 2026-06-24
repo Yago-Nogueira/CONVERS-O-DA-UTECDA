@@ -1,4 +1,4 @@
-"""Loading dialog and simple dialogs migrated from tkSimpleDialog using PyQt6."""
+"""Loading dialog and simple dialogs using PyQt6."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from threading import Thread
 from typing import Any
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
-from qt_ui import BOTH, HORIZONTAL, WORD, DoubleVar, StringVar, TclError
-from qt_ui.ttk import Progressbar
+from pyqt_utils import BOTH, HORIZONTAL, WORD, DoubleVar, StringVar, AppError, Toplevel, Frame, Label, Text, Button
+from pyqt_utils.ttk import Progressbar
 from util import Utilitarios
 
 
@@ -30,7 +30,7 @@ class Loading(QDialog):
         cancelable=True,
         _thread_name=None,
     ):
-        tk.Toplevel.__init__(self, parent)
+        Toplevel.__init__(self, parent)
 
         self.transient(parent)
         self._uti = uti
@@ -39,10 +39,10 @@ class Loading(QDialog):
         self._Dado_config = Dado_config
         self.result = None
 
-        body = tk.Frame(self)
+        body = Frame(self)
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
-        lblinfo = tk.Label(self, width=500, wraplength=520, anchor="center", font="Helvetica 8 bold")
+        lblinfo = Label(self, width=500, wraplength=520, anchor="center", font="Helvetica 8 bold")
         lblinfo.pack(fill=BOTH, expand=True)
 
         if info_loading:
@@ -84,7 +84,7 @@ class Loading(QDialog):
             while True:
                 if pro["value"] == maxs:
                     if self._Dado_config:
-                        from qt_ui import messagebox
+                        from pyqt_utils import messagebox
 
                         messagebox.showinfo(
                             self._Dado_config.idioma(182),
@@ -98,7 +98,7 @@ class Loading(QDialog):
                     self.parent.focus_set()
                     self.destroy()
                     break
-        except TclError as e:
+        except AppError as e:
             print(e)
 
     def re_prog(self):
@@ -108,7 +108,7 @@ class Loading(QDialog):
         pass
 
     def cancel(self):
-        from qt_ui import messagebox
+        from pyqt_utils import messagebox
 
         if self._Dado_config and messagebox.askokcancel(
             self._Dado_config.idioma(47),
@@ -133,12 +133,12 @@ class Dialog(QDialog):
     """Simple scrollable info dialog."""
 
     def __init__(self, parent, title, info_lines, icon=None):
-        tk.Toplevel.__init__(self, parent)
+        Toplevel.__init__(self, parent)
         self.title(str(title))
         self.transient(parent)
         self.grab_set()
 
-        text = tk.Text(self, width=90, height=20, wrap=WORD)
+        text = Text(self, width=90, height=20, wrap=WORD)
         text.pack(fill=BOTH, expand=True, padx=5, pady=5)
         if isinstance(info_lines, (list, tuple)):
             content = "\n".join(str(line) for line in info_lines)
@@ -147,7 +147,7 @@ class Dialog(QDialog):
         text.insert("1.0", content)
         text.config(state="disabled")
 
-        btn = tk.Button(self, text="OK", command=self.destroy)
+        btn = Button(self, text="OK", command=self.destroy)
         btn.pack(pady=5)
 
         if icon:
@@ -159,7 +159,7 @@ class Dialog(QDialog):
 
 
 if __name__ == "__main__":
-    from qt_ui import Tk
+    from pyqt_utils import Tk
 
     tela_graf = Tk()
     var_barra_loading = DoubleVar()

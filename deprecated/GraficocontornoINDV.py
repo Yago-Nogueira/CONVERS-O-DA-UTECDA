@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk 
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT 
 from matplotlib.ticker import LinearLocator , FuncFormatter,IndexLocator
 from datetime import datetime, timedelta, date
-from qt_ui.filedialog import askdirectory
-from qt_ui import ttk, messagebox,Toplevel
+from pyqt_utils.filedialog import askdirectory
+from pyqt_utils import ttk, messagebox,Toplevel
 import matplotlib.ticker as ticker
 from qtfontchooser import askfont
 from qt_calendar import DateEntry
@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 import matplotlib,os,calendar
 from util import Utilitarios,VerticalScrolledFrame,DadoIdioma
 matplotlib.use("QtAgg")
-from qt_ui import *  
-import qt_ui as tk
+from pyqt_utils import *  
+import pyqt_utils as ui
 import numpy as np
-class GraficocontornoINDV(tk.Toplevel):
+class GraficocontornoINDV(ui.Toplevel):
 	def __init__(self,root):
 		Toplevel.__init__(self,root)
 		plt.rc('font', weight='bold')
@@ -46,12 +46,12 @@ class GraficocontornoINDV(tk.Toplevel):
 		self.page2 = Frame(self)
 		self.page1.bind('<FocusIn>',lambda e: self.refreshCanvas())
 		self.fig, self.axes = plt.subplots()
-		self.canvas = FigureCanvasTkAgg(self.fig,self.page1)
+		self.canvas = FigureCanvasQTAgg(self.fig,self.page1)
 		self.canvas.draw()
 ###############################|Has deprecated ... breves...|#########################################################################################################################################################		
-		self.toolbar = NavigationToolbar2Tk(self.canvas, self.page1)
-		# self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-		# self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+		self.toolbar = NavigationToolbar2QT(self.canvas, self.page1)
+		# self.canvas.get_widget().pack(side=ui.BOTTOM, fill=ui.BOTH, expand=True)
+		# self.canvas._qt_canvas.pack(side=ui.TOP, fill=ui.BOTH, expand=True)
 		# self.toolbar.update()
 		nb.add(self.page1,text =self.Dado_config.idioma(7))
 		nb.add(self.page2,text =self.Dado_config.idioma(17))
@@ -442,8 +442,8 @@ class GraficocontornoINDV(tk.Toplevel):
 					self.cbar.ax.tick_params(width=float(self.largtick.get()),size=float(self.alttick.get()),labelsize=float(self.sizetick.get())) 
 					# self.cbar.set_canvas(self.canvas)
 				
-				self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-				self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+				self.canvas.get_widget().pack(side=ui.BOTTOM, fill=ui.BOTH, expand=True)
+				self.canvas._qt_canvas.pack(side=ui.TOP, fill=ui.BOTH, expand=True)
 				self.toolbar.update()
 				self.fig.canvas.draw()
 

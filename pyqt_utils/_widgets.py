@@ -1,4 +1,4 @@
-"""Standard tkinter widget implementations using PyQt6."""
+"""Standard widget implementations using PyQt6."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ._base import BaseWidget, TclError
+from ._base import BaseWidget, AppError
 from ._variables import BooleanVar, DoubleVar, IntVar, StringVar, Variable
 
 

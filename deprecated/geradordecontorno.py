@@ -1,15 +1,15 @@
-from qt_ui import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pyqt_utils import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.ticker import LinearLocator , FuncFormatter,IndexLocator
-from qt_ui.filedialog import askdirectory
+from pyqt_utils.filedialog import askdirectory
 import matplotlib.ticker as ticker
 from qtfontchooser import askfont
 import matplotlib.pyplot as plt
 from util import Utilitarios
-from qt_ui import ttk,messagebox
-from qt_ui import *
+from pyqt_utils import ttk,messagebox
+from pyqt_utils import *
 import matplotlib,os
 matplotlib.use("QtAgg")
-import qt_ui as tk
+import pyqt_utils as ui
 import numpy as np
 #from sys import platform
 #from matplotlib import *
@@ -266,8 +266,8 @@ class Graficocontorno:
 			self.btnatualiza.pack(side='bottom',fill=X)
 			try:
 				plt.close('all')
-				canvas.get_tk_widget().pack_forget()
-				canvas._tkcanvas.pack_forget()
+				canvas.get_widget().pack_forget()
+				canvas._qt_canvas.pack_forget()
 				toolbar.pack_forget()
 			except:
 				pass
@@ -388,13 +388,13 @@ class Graficocontorno:
 					contcbar+=passo
 				cbar = plt.colorbar(ticks=tickscolor)
 			cbar.ax.set_title(titulob,**fontb)
-			canvas = FigureCanvasTkAgg(fig,self.page1)
+			canvas = FigureCanvasQTAgg(fig,self.page1)
 			canvas.show()
-			canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-			toolbar = NavigationToolbar2Tk(canvas, self.page1)
+			canvas.get_widget().pack(side=ui.BOTTOM, fill=ui.BOTH, expand=True)
+			toolbar = NavigationToolbar2QT(canvas, self.page1)
 			toolbar.update()
-			canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-			canvas._tkcanvas.bind("<FocusIn>",lambda e:self.listafile.focus_set())
+			canvas._qt_canvas.pack(side=ui.TOP, fill=ui.BOTH, expand=True)
+			canvas._qt_canvas.bind("<FocusIn>",lambda e:self.listafile.focus_set())
 			if varsave.get() == True:
 				#dest = os.path.dirname(os.path.realpath(__file__))+r"/GráficosPNG/"
 				dest = filename 

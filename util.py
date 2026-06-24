@@ -55,8 +55,8 @@ class TopNavigationToolbar(NavigationToolbar):
 
    # override _Spacer() to create vertical separator
 #    def _Spacer(self):
-#       s = tk.Frame(self, width=26, relief=tk.RIDGE, bg="DarkGray", padx=2)
-#       s.pack(side=tk.LEFT, pady=5) # pack in vertical direction
+#       s = Frame(self, width=26, relief="ridge", bg="DarkGray", padx=2)
+#       s.pack(side="left", pady=5)
 #       return s
 
    # disable showing mouse position in toolbar
@@ -448,7 +448,7 @@ class Utilitarios:
             if i <= 0:i = listab.size()
             listab.see(i - 1)
             listab.select_set(i-1)
-        except TclError:
+        except Exception:
             listab.selection_clear(0, "end")
             i = listab.size()
             listab.see(i - 1)
@@ -464,7 +464,7 @@ class Utilitarios:
             if i >= listab.size()-1:i = -1
             listab.see(i + 1)
             listab.select_set(i+1)
-        except TclError:
+        except Exception:
             listab.selection_clear(0, "end")
             listab.see(0)
             listab.select_set(0)
@@ -526,9 +526,9 @@ class Utilitarios:
     # thread_PAINEL_MAPA.setDaemon(True)
     # thread_PAINEL_MAPA.start()
 
-    # self.VAR_BARRA_LOADING_GRAFICO_PAINEL_MAPA = tk.DoubleVar(self)
-    # self.VAR_BARRA_LOADING_LABEL_GRAFICO_PAINEL_MAPA = tk.StringVar(self)
-    # self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA = tk.BooleanVar(self)
+    # self.VAR_BARRA_LOADING_GRAFICO_PAINEL_MAPA = DoubleVar(self)
+    # self.VAR_BARRA_LOADING_LABEL_GRAFICO_PAINEL_MAPA = StringVar(self)
+    # self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA = BooleanVar(self)
     # self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA.set(False)
 
 
@@ -538,7 +538,7 @@ class Utilitarios:
         # self.VAR_BARRA_LOADING_LABEL_GRAFICO_Busca_Siglas = StringVar(self)
         # self.stop_thread_Busca_Siglas.set(False)
 
-        # tkSimpleDialog.Loading(self.master,'Busca Siglas',orient_u = HORIZONTAL,maximum_u = 100,length_u = 500,mode_u = 'determinate',icon=self.resource_path('img\icone.ico'),progress_var = self.VAR_BARRA_LOADING_GRAFICO_Busca_Siglas,info_loading=self.VAR_BARRA_LOADING_LABEL_GRAFICO_Busca_Siglas,uti = self, Dado_config = DadoIdioma(), stop_thread = self.stop_thread_Busca_Siglas, cancelable = False)#, threads = thread_Busca_Siglas)
+        # qtSimpleDialog.Loading(self.master,'Busca Siglas',orient_u = HORIZONTAL,maximum_u = 100,length_u = 500,mode_u = 'determinate',icon=self.resource_path('img\icone.ico'),progress_var = self.VAR_BARRA_LOADING_GRAFICO_Busca_Siglas,info_loading=self.VAR_BARRA_LOADING_LABEL_GRAFICO_Busca_Siglas,uti = self, Dado_config = DadoIdioma(), stop_thread = self.stop_thread_Busca_Siglas, cancelable = False)#, threads = thread_Busca_Siglas)
 
 
         # thread_with_trace(function = Progressbar, args = (self, orient='horizontal', mode='determinate', length=100,)).start()

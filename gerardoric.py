@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from qt_ui.filedialog import askdirectory
-from qt_ui import messagebox,ttk
+from pyqt_utils.filedialog import askdirectory
+from pyqt_utils import messagebox,ttk
 from util import Utilitarios,DadoIdioma
-import qt_ui as tk 
-from qt_ui import * 
+import pyqt_utils as ui 
+from pyqt_utils import * 
 import math,os
 # import numpy as np
 
 
-class Geradordeinclinacao(tk.Tk):
+class Geradordeinclinacao(ui.Tk):
 	def __init__(self,root):
-		tk.Tk.__init__(self)
+		ui.Tk.__init__(self)
 		self.geometry('800x600')
 		self.uti = Utilitarios()
 		self.Dado_config = DadoIdioma()
@@ -41,7 +41,7 @@ class Geradordeinclinacao(tk.Tk):
 		self.dataCols = (self.Dado_config.idioma(59),self.Dado_config.idioma(60),self.Dado_config.idioma(61),self.Dado_config.idioma(63),self.Dado_config.idioma(62),self.Dado_config.idioma(88),'Dip Lat',self.Dado_config.idioma(101))
 		self.grade_igrf_dip = ttk.Treeview(self.frameGs[2],columns=self.dataCols,show='headings')
 		self.grade_igrf_dip.pack(side="left",fill='both',expand=1)
-		self.ysb = ttk.Scrollbar(self.frameGs[2],orient=tk.VERTICAL, command=self.grade_igrf_dip.yview)
+		self.ysb = ttk.Scrollbar(self.frameGs[2],orient=ui.VERTICAL, command=self.grade_igrf_dip.yview)
 		self.grade_igrf_dip['yscroll'] = self.ysb.set
 		self.ysb.pack(side='right',fill=Y)
 		for c in self.dataCols:
@@ -76,7 +76,7 @@ class Geradordeinclinacao(tk.Tk):
 		self.btngerar.pack(fill=X)
 		self.btnsave = Button(self.frameGs[3],text=self.Dado_config.idioma(90),relief="groove",command=self.salvarGRADE)
 		self.btnsave.pack(fill=X)
-		self.protocol("WM_DELETE_WINDOW",lambda tk=root:self.uti.troca(tk,self))
+		self.protocol("WM_DELETE_WINDOW",lambda parent=root: self.uti.troca(parent,self))
 		self.iconbitmap(self.uti.resource_path('img\icone.ico'))
 	
 	def salvarGRADE(self):

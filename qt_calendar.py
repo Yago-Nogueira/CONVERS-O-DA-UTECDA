@@ -1,4 +1,4 @@
-"""DateEntry widget compatible with tkcalendar using PyQt6."""
+"""DateEntry widget using PyQt6."""
 
 from __future__ import annotations
 
@@ -8,12 +8,12 @@ from typing import Any
 from PyQt6.QtCore import QDate, QLocale, Qt
 from PyQt6.QtWidgets import QDateEdit, QWidget
 
-from qt_ui._base import BaseWidget
-from qt_ui._variables import StringVar
+from pyqt_utils._base import BaseWidget
+from pyqt_utils._variables import StringVar
 
 
 class DateEntry(BaseWidget):
-    """QDateEdit with calendar popup, mimicking tkcalendar.DateEntry."""
+    """QDateEdit with calendar popup."""
 
     def __init__(self, master: Any = None, **kwargs):
         self._init_base(master)

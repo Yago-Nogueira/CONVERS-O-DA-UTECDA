@@ -19,6 +19,7 @@ from threading import Thread
 import cartopy.crs as ccrs
 from matplotlib import cm
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, QFileDialog
+import pyqt_utils as ui
 import pandas as pd
 import numpy as np
 
@@ -32,7 +33,7 @@ import sys
 
 from comp_GRADE_MAPA import COMP_GRADE_MAPA
 from gerardoric import Geradordeinclinacao
-from tkcalendar_Days import Calendar
+from calendar_widget import Calendar
 from maskedentry import MaskedWidget
 from comp_DESVIO import COMP_DESVIO
 from comp_ONDAS import COMP_ONDAS
@@ -80,7 +81,7 @@ class Main_UTECDA(QWidget):
 
         self.MAPA = None
 
-        self.habilitar_DIP_lista_estacoes = tk.BooleanVar(self)
+        self.habilitar_DIP_lista_estacoes = ui.BooleanVar(self)
         self.habilitar_DIP_lista_estacoes.set(False)
         self.Listas_Estacoes_Cadastradas = []
         self.Lista_Estacoes_NAO_Cadastradas = []
@@ -93,46 +94,46 @@ class Main_UTECDA(QWidget):
         self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = None
         self.data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA = None
         self.data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA = None
-        self.Value_Mostrar_Estacoes_MAPA_PRINCIPAL = tk.BooleanVar(self)
+        self.Value_Mostrar_Estacoes_MAPA_PRINCIPAL = ui.BooleanVar(self)
         self.Value_Mostrar_Estacoes_MAPA_PRINCIPAL.set(True)
-        self.stop_thread_MAPA = tk.BooleanVar(self)
-        self.stop_thread_PAINEL_MAPA = tk.BooleanVar(self)
-        self.Value_Salvar_Figura_JANELA_TOPLEVEL_GRAFICO = tk.BooleanVar(self)
-        self.Value_Salvar_Matriz_JANELA_TOPLEVEL_GRAFICO = tk.BooleanVar(self)
-        self.filedir = tk.StringVar(self)
-        self.Value_Check_Filter = tk.BooleanVar(self)
-        self.Value_Check_VIDEO_MAPA = tk.BooleanVar(self)
-        self.Value_cb_Local_MAPA = tk.StringVar(self)
-        self.Value_DATA_entry_main_inicio = tk.StringVar(self)
-        self.Value_DATA_entry_main_fim = tk.StringVar(self)
+        self.stop_thread_MAPA = ui.BooleanVar(self)
+        self.stop_thread_PAINEL_MAPA = ui.BooleanVar(self)
+        self.Value_Salvar_Figura_JANELA_TOPLEVEL_GRAFICO = ui.BooleanVar(self)
+        self.Value_Salvar_Matriz_JANELA_TOPLEVEL_GRAFICO = ui.BooleanVar(self)
+        self.filedir = ui.StringVar(self)
+        self.Value_Check_Filter = ui.BooleanVar(self)
+        self.Value_Check_VIDEO_MAPA = ui.BooleanVar(self)
+        self.Value_cb_Local_MAPA = ui.StringVar(self)
+        self.Value_DATA_entry_main_inicio = ui.StringVar(self)
+        self.Value_DATA_entry_main_fim = ui.StringVar(self)
         self.Value_DATA_entry_main_inicio.set("03/07/2021")
-        self.Value_grid_axes_X = tk.BooleanVar(self)
-        self.Value_grid_axes_Y = tk.BooleanVar(self)
-        self.Value_Line_Cores = tk.BooleanVar(self)
+        self.Value_grid_axes_X = ui.BooleanVar(self)
+        self.Value_grid_axes_Y = ui.BooleanVar(self)
+        self.Value_Line_Cores = ui.BooleanVar(self)
         self.Cont_Line_Horas_JANELA_TOPLEVEL_GRAFICO = 0
-        self.Value_Line_Horas_JANELA_TOPLEVEL_GRAFICO = tk.BooleanVar(self)
-        self.Value_Lat_Dip_axes_Y = tk.IntVar(self)
+        self.Value_Line_Horas_JANELA_TOPLEVEL_GRAFICO = ui.BooleanVar(self)
+        self.Value_Lat_Dip_axes_Y = ui.IntVar(self)
         self.Value_Lat_Dip_axes_Y.set(1)
-        self.Value_station_on_TICK = tk.BooleanVar(self)
-        self.Value_Formato_DATA_Grafico = tk.IntVar(self)
+        self.Value_station_on_TICK = ui.BooleanVar(self)
+        self.Value_Formato_DATA_Grafico = ui.IntVar(self)
         self.Value_Formato_DATA_Grafico.set(1)
-        self.Value_State_Legenda = tk.BooleanVar(self)
+        self.Value_State_Legenda = ui.BooleanVar(self)
         self.Value_State_Legenda.set(0)
-        self.String_Label_dir = tk.StringVar(self)
-        Value_Caminho_Dir = tk.BooleanVar(self)
+        self.String_Label_dir = ui.StringVar(self)
+        Value_Caminho_Dir = ui.BooleanVar(self)
         Value_Caminho_Dir.set(False)
         self.dir_documents = os.path.expanduser('~/UTECDA')
-        self.License_val = tk.BooleanVar(self)
+        self.License_val = ui.BooleanVar(self)
         self.License_val.set(True)
-        self.Cont_Station_Selecionadas_Lista = tk.IntVar(self)
+        self.Cont_Station_Selecionadas_Lista = ui.IntVar(self)
         self.Cont_Station_Selecionadas_Lista.set(0)
-        self.varx = tk.IntVar(self)
+        self.varx = ui.IntVar(self)
         self.varx.set(0)
-        self.vary = tk.IntVar(self)
+        self.vary = ui.IntVar(self)
         self.vary.set(0)
-        self.varabs = tk.IntVar(self)
+        self.varabs = ui.IntVar(self)
         self.varabs.set(1)
-        self.rots = tk.IntVar(self)
+        self.rots = ui.IntVar(self)
         self.rots.set(1)
         
 
@@ -164,14 +165,14 @@ class Main_UTECDA(QWidget):
         
 
         self.JANELA_TOPLEVEL_GRAFICO.iconbitmap(self.uti.resource_path('img\icone.ico'))
-        self.JANELA_TOPLEVEL_GRAFICO.bind("<Button-3>", self.Do_popup_TopLevel_Grafico)  # CONVERT_BIND
+        self.JANELA_TOPLEVEL_GRAFICO.bind("<Button-3>", self.Do_popup_TopLevel_Grafico)
         self.JANELA_TOPLEVEL_GRAFICO.protocol("WM_DELETE_WINDOW", self.close_JANELA_TOPLEVEL_GRAFICO )
         self.FIGURA_TOPLEVEL_GRAFICO, self.AXES_TOPLEVEL_GRAFICO = plt.subplots()
         self.FIGURA_TOPLEVEL_GRAFICO.canvas.mpl_connect('pick_event', self.Thread_Pick_Event_PROPRIEDADES_JANELA_TOPLEVEL_GRAFICO)
         self.CANVAS_JANELA_TOPLEVEL_GRAFICO = FigureCanvas(self.FIGURA_TOPLEVEL_GRAFICO, self.JANELA_TOPLEVEL_GRAFICO)
-        self.CANVAS_JANELA_TOPLEVEL_GRAFICO.get_tk_widget().pack(side="bottom", fill="both", expand = True)
+        self.CANVAS_JANELA_TOPLEVEL_GRAFICO.get_widget().pack(side="bottom", fill="both", expand = True)
         self.NAVIGATIONTOOLBAR_TOPLEVEL_GRAFICO = NavigationToolbar(self.CANVAS_JANELA_TOPLEVEL_GRAFICO, self.JANELA_TOPLEVEL_GRAFICO)
-        self.CANVAS_JANELA_TOPLEVEL_GRAFICO._tkcanvas.pack(side="top", fill="both", expand = True)  # CONVERT_PACK
+        self.CANVAS_JANELA_TOPLEVEL_GRAFICO._qt_canvas.pack(side="top", fill="both", expand = True)
 
 
         self.Left_Frame = VerticalScrolledFrame(self, relief="ridge", bd = 2, bg = 'gray')
@@ -205,7 +206,7 @@ class Main_UTECDA(QWidget):
         try:
             self.uti.teste_licença()
             menu_programas.entryconfig(self.Dado_config.idioma(8), state = "normal")
-            self.Left_Frame.pack(  # CONVERT_PACKside="left", fill="both")
+            self.Left_Frame.pack(side="left", fill="both")
             Value_Caminho_Dir.set(True)
         except (IOError,IndexError):
             self.License_val.set(False)
@@ -216,7 +217,7 @@ class Main_UTECDA(QWidget):
 
 
         self.Frame_Local_MAPA = QWidget(self.Left_Frame.interior)
-        self.Frame_Local_MAPA.pack(  # CONVERT_PACKside="top", fill="both")
+        self.Frame_Local_MAPA.pack(side="top", fill="both")
 
         QLabel(self.Frame_Local_MAPA, width = 25, text = self.Dado_config.idioma(157), relief="ridge").pack(side="top", fill="x")
 
@@ -225,71 +226,71 @@ class Main_UTECDA(QWidget):
         if not self.MAPA:self.MAPA = self.Lista_Nomes_Locais[0]
         self.Value_cb_Local_MAPA.set(self.MAPA)
 
-        self.cb_Local_Mapa = tk.ttk.Combobox(self.Frame_Local_MAPA, state = 'readonly', exportselection = False, textvariable = self.Value_cb_Local_MAPA, values = self.Lista_Nomes_Locais)
-        self.cb_Local_Mapa.bind("<<ComboboxSelected>>", self.Set_Local_MAPA)  # CONVERT_BIND
-        self.cb_Local_Mapa.pack(  # CONVERT_PACKside="top", fill="x")
+        self.cb_Local_Mapa = ui.ttk.Combobox(self.Frame_Local_MAPA, state = 'readonly', exportselection = False, textvariable = self.Value_cb_Local_MAPA, values = self.Lista_Nomes_Locais)
+        self.cb_Local_Mapa.bind("<<ComboboxSelected>>", self.Set_Local_MAPA)
+        self.cb_Local_Mapa.pack(side="top", fill="x")
 
         QPushButton(self.Left_Frame.interior, text = self.Dado_config.idioma(18), command = self.Selecionar_Dir_Data, relief="ridge").pack(side="top", fill="x")
 
         self.Label_String_dir = QLabel(self.Left_Frame.interior, width = 40 , anchor="e", textvariable = self.String_Label_dir, relief="ridge")
-        self.Label_String_dir.pack(  # CONVERT_PACKfill="x")
+        self.Label_String_dir.pack(fill="x")
 
         self.frame_filter = QWidget(self.Left_Frame.interior, relief="ridge", bd = 2)
-        self.frame_filter.pack(  # CONVERT_PACKside="top", fill="both", expand = True)
+        self.frame_filter.pack(side="top", fill="both", expand = True)
 
         QLabel(self.frame_filter, text = self.Dado_config.idioma(166)).pack(side="left", fill="both", expand = True)
         QCheckBox(self.frame_filter, variable = self.Value_Check_Filter, relief="ridge", bd = 2, width = 5, command = self.Aplicar_Filtro_Dir_station_OBS).pack()
         self.Value_Check_Filter.set(self.Dado_config.Settings["INTERFACE"]["iFiltro"])
 
         self.Frame_Listbx_Stations_OBS = QWidget(self.Left_Frame.interior)
-        self.Frame_Listbx_Stations_OBS.pack(  # CONVERT_PACKside="top", fill="both")
+        self.Frame_Listbx_Stations_OBS.pack(side="top", fill="both")
 
-        self.Listbx_Stations_OBS = QListWidget(self.Frame_Listbx_Stations_OBS, exportselection = False, bd = 2, relief="ridge", width = 25, highlightthickness = 0, selectmode = "single", font = tk.font.Font(size = 10))
-        self.Listbx_Stations_OBS.pack(  # CONVERT_PACKside="left", fill="both", expand = True)
+        self.Listbx_Stations_OBS = QListWidget(self.Frame_Listbx_Stations_OBS, exportselection = False, bd = 2, relief="ridge", width = 25, highlightthickness = 0, selectmode = "single", font = ui.font.Font(size = 10))
+        self.Listbx_Stations_OBS.pack(side="left", fill="both", expand = True)
         self.scroll_bar_Listbx_Stations_OBS = QScrollBar(self.Frame_Listbx_Stations_OBS, bd = 2, relief="raised")
-        self.scroll_bar_Listbx_Stations_OBS.pack(  # CONVERT_PACKside="right", fill="y")
+        self.scroll_bar_Listbx_Stations_OBS.pack(side="right", fill="y")
         self.scroll_bar_Listbx_Stations_OBS.configure(command = self.Listbx_Stations_OBS.yview)
         self.Listbx_Stations_OBS.configure(yscrollcommand = self.scroll_bar_Listbx_Stations_OBS.set)
 
         self.Frame_Select_Station_obs = QWidget(self.Left_Frame.interior)
-        self.Frame_Select_Station_obs.pack(  # CONVERT_PACKfill="x")
+        self.Frame_Select_Station_obs.pack(fill="x")
 
         QLabel(self.Frame_Select_Station_obs,textvariable = self.Cont_Station_Selecionadas_Lista, relief="ridge").pack(side="left", fill="both", expand = True)
         
         QPushButton(self.Frame_Select_Station_obs, textvariable = self.texto,relief="ridge", command = self.Clear_SELECTION_Plot_SCATTER_and_Listbx).pack(side="right", fill="both", expand = True)
         QPushButton(self.Frame_Select_Station_obs, text = "Save est",relief="ridge", command = self.Save_SELECTION_Plot_SCATTER_and_Listbx).pack(side="right", fill="both", expand = True)
 
-        self.Value_cb_Modelo_Grafico = tk.StringVar(self)
-        style=tk.ttk.Style()
+        self.Value_cb_Modelo_Grafico = ui.StringVar(self)
+        style=ui.ttk.Style()
         style.theme_create('person',parent='alt',settings={'TCombobox':{'configure':{'selectforeground':'black','selectbackground':'white','fieldforeground':'black','fieldbackground':'yellow','background':'yellow'}}})
         style.theme_use('person')
         
-        self.cb_modelo_grafico = tk.ttk.Combobox(self.Left_Frame.interior, state = "disabled", exportselection = False, textvariable = self.Value_cb_Modelo_Grafico, values = ['Individual (STD)', 'EIA (STD)', 'Desvio (STD)', 'Mapa VTEC/ROTI (CMN)', 'Painel Mapa VTEC/ROTI (CMN)', 'ROT/VTEC (CMN)', 'ONDAS (STD)'])
-        self.cb_modelo_grafico.bind("<<ComboboxSelected>>", self.Exibir_Menu_de_Propriedades_dos_Graficos)  # CONVERT_BIND
-        self.cb_modelo_grafico.pack(  # CONVERT_PACKside="top", fill="x")
+        self.cb_modelo_grafico = ui.ttk.Combobox(self.Left_Frame.interior, state = "disabled", exportselection = False, textvariable = self.Value_cb_Modelo_Grafico, values = ['Individual (STD)', 'EIA (STD)', 'Desvio (STD)', 'Mapa VTEC/ROTI (CMN)', 'Painel Mapa VTEC/ROTI (CMN)', 'ROT/VTEC (CMN)', 'ONDAS (STD)'])
+        self.cb_modelo_grafico.bind("<<ComboboxSelected>>", self.Exibir_Menu_de_Propriedades_dos_Graficos)
+        self.cb_modelo_grafico.pack(side="top", fill="x")
 
 
         self.Frame_propriedades_modelo_INDIVIDUAL = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_INDIVIDUAL_Calendario = QWidget(self.Frame_propriedades_modelo_INDIVIDUAL, bd = 1, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_INDIVIDUAL_Calendario.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_INDIVIDUAL_Calendario.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_INDIVIDUAL_Calendario, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.calendario_modelo_grafico_INDIVIDUAL = DateEntry(self.Frame_propriedades_modelo_INDIVIDUAL_Calendario, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 2)
         
         
-        self.calendario_modelo_grafico_INDIVIDUAL.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.calendario_modelo_grafico_INDIVIDUAL.pack(  # CONVERT_PACKfill="x")
+        self.calendario_modelo_grafico_INDIVIDUAL.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.calendario_modelo_grafico_INDIVIDUAL.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_INDIVIDUAL_Calendario, text = self.Dado_config.idioma(54)).pack(fill="x")
         DateEntry(self.Frame_propriedades_modelo_INDIVIDUAL_Calendario, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim, bg = 'darkblue', fg = 'white', borderwidth = 2).pack(fill="x")
         
         
         
         self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA = QWidget(self.Frame_propriedades_modelo_INDIVIDUAL, bd = 1, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA, text = self.Dado_config.idioma(130), relief="groove").pack(fill="x")
         QRadioButton(self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 1, text = self.Dado_config.idioma(40)).pack(side="left", fill="x", expand = True)
         QRadioButton(self.Frame_propriedades_modelo_INDIVIDUAL_FORMATO_DIA, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 0, text = self.Dado_config.idioma(135)).pack(side="right", fill="x", expand = True)
         self.Frame_propriedades_modelo_INDIVIDUAL_btn = QWidget(self.Frame_propriedades_modelo_INDIVIDUAL, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_INDIVIDUAL_btn.pack(  # CONVERT_PACKfill="x", side="bottom")
+        self.Frame_propriedades_modelo_INDIVIDUAL_btn.pack(fill="x", side="bottom")
         QPushButton(self.Frame_propriedades_modelo_INDIVIDUAL_btn, text = self.Dado_config.idioma(108), relief="ridge", command = self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO).pack(fill="x")
 
 
@@ -319,27 +320,27 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_modelo_DESVIO = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_DESVIO_Dias_Calmos = QWidget(self.Frame_propriedades_modelo_DESVIO, bd = 3, relief="groove")
-        self.Frame_propriedades_modelo_DESVIO_Dias_Calmos.pack(  # CONVERT_PACKfill="both")
+        self.Frame_propriedades_modelo_DESVIO_Dias_Calmos.pack(fill="both")
         QLabel(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, text = self.Dado_config.idioma(123)).pack(fill="x", side="top")
         self.Calendario_Dias_Calmos = Calendar(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, width = 10, font = "Arial 10", selectmode = 'day', cursor = "hand2", Locator = self.Dado_config.idioma(0), textvariable = self.Value_DATA_entry_main_inicio)
         
         
-        self.Calendario_Dias_Calmos.pack(  # CONVERT_PACKfill="both", expand = True)
+        self.Calendario_Dias_Calmos.pack(fill="both", expand = True)
         QLabel(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, text = self.Dado_config.idioma(124), relief="ridge").pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.Calendario_Data_DESVIO_Inicial = DateEntry(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 1)
-        self.Calendario_Data_DESVIO_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_DESVIO_Inicial.pack(  # CONVERT_PACKfill="both", expand = True)
+        self.Calendario_Data_DESVIO_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_DESVIO_Inicial.pack(fill="both", expand = True)
         QLabel(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos , text = self.Dado_config.idioma(54)).pack(fill="x")
         DateEntry(self.Frame_propriedades_modelo_DESVIO_Dias_Calmos, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim, bg = 'darkblue', fg = 'white', borderwidth = 1).pack(fill="both", expand = True)
         self.Frame_propriedades_modelo_DESVIO_Recursos = QWidget(self.Frame_propriedades_modelo_DESVIO, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_DESVIO_Recursos.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_DESVIO_Recursos.pack(fill="x")
         self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia = QWidget(self.Frame_propriedades_modelo_DESVIO, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia.pack(fill="x")
         self.Frame_propriedades_modelo_DESVIO_Recursos_Legendas = QWidget(self.Frame_propriedades_modelo_DESVIO, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_DESVIO_Recursos_Legendas.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_DESVIO_Recursos_Legendas.pack(fill="x")
         self.Frame_propriedades_modelo_DESVIO_Recursos_PLOT = QWidget(self.Frame_propriedades_modelo_DESVIO, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_DESVIO_Recursos_PLOT.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_DESVIO_Recursos_PLOT.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia, text = self.Dado_config.idioma(130), relief="groove").pack(side="top", fill="x")
         QRadioButton(self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 1, text = self.Dado_config.idioma(40)).pack(side="left", fill="x", expand = True)
         QRadioButton(self.Frame_propriedades_modelo_DESVIO_Recursos_Formato_dia, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 0, text = self.Dado_config.idioma(131)).pack(side="right", fill="x", expand = True)
@@ -350,52 +351,52 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_modelo_MAPA = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_MAPA_Entry_inicio = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_Entry_inicio.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_Entry_inicio.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_Entry_inicio, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.Calendario_Data_MAPA_Inicial = DateEntry(self.Frame_propriedades_modelo_MAPA_Entry_inicio, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 2)  
         
         
         
-        self.Calendario_Data_MAPA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_MAPA_Inicial.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_MAPA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_MAPA_Inicial.pack(fill="x")
         self.Frame_propriedades_modelo_MAPA_H_INICIO = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_H_INICIO.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_H_INICIO.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_H_INICIO, text = self.Dado_config.idioma(172), relief="groove").pack(side="left", fill="both", expand = True)       
         self.MAPA_Time_INICIO = MaskedWidget(self.Frame_propriedades_modelo_MAPA_H_INICIO, 'fixed', mask='99:99:99', width = 10)
         self.MAPA_Time_INICIO.insert(0, '000000')
-        self.MAPA_Time_INICIO.pack(  # CONVERT_PACKside="right", fill="both")
+        self.MAPA_Time_INICIO.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_MAPA_Entry_fim = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_Entry_fim.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_Entry_fim.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_Entry_fim, text = self.Dado_config.idioma(54)).pack(fill="x")
         self.Calendario_Data_MAPA_Final = DateEntry(self.Frame_propriedades_modelo_MAPA_Entry_fim, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim , bg = 'darkblue', fg = 'white', borderwidth = 2)  
-        self.Calendario_Data_MAPA_Final.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_MAPA_Final.pack(fill="x")
         self.Frame_propriedades_modelo_MAPA_H_FIM = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_H_FIM.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_H_FIM.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_H_FIM, text = self.Dado_config.idioma(173), relief="groove").pack(side="left", fill="both", expand = True)
         self.MAPA_Time_FIM = MaskedWidget(self.Frame_propriedades_modelo_MAPA_H_FIM, 'fixed', mask='99:99:99', width = 10)
         self.MAPA_Time_FIM.insert(0, '240000')
-        self.MAPA_Time_FIM.pack(  # CONVERT_PACKside="right", fill="both")
+        self.MAPA_Time_FIM.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_MAPA_ELE = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_ELE.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_ELE.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_ELE, text = self.Dado_config.idioma(181), relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_MAPA_Filter_ELE = QLineEdit(self.Frame_propriedades_modelo_MAPA_ELE, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_MAPA_Filter_ELE.insert(END,self.Dado_config.Settings["MAPA"]["fElevation_Filter"])
-        self.Entry_MAPA_Filter_ELE.pack(  # CONVERT_PACKside="right")
+        self.Entry_MAPA_Filter_ELE.pack(side="right")
         self.Frame_propriedades_modelo_MAPA_D_TIME = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_D_TIME.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_D_TIME.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_MAPA_D_TIME, text = self.Dado_config.idioma(174), relief="groove").pack(side="left", fill="both", expand = True)
         self.MAPA_Delta_Time = QLineEdit(self.Frame_propriedades_modelo_MAPA_D_TIME, width = 8, validate = "key", validatecommand = vcmd_get_number, bd = 2)
         self.MAPA_Delta_Time.insert(END, '1')
-        self.MAPA_Delta_Time.pack(  # CONVERT_PACKside="right", fill="both")
+        self.MAPA_Delta_Time.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_MAPA_VTEC_ROTI = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKfill="x")        
+        self.Frame_propriedades_modelo_MAPA_VTEC_ROTI.pack(fill="x")        
         QLabel(self.Frame_propriedades_modelo_MAPA_VTEC_ROTI, text = self.Dado_config.idioma(185), relief="groove").pack(side="left", fill="both", expand = True)
-        self.CB_DADOS_MAPA_VTEC_ROTI = tk.ttk.Combobox(self.Frame_propriedades_modelo_MAPA_VTEC_ROTI, width = 10, state = 'readonly', exportselection = False, values = ["VTEC", "ROT", "ROTI"])
-        self.CB_DADOS_MAPA_VTEC_ROTI.bind("<<ComboboxSelected>>", self.Set_Dados_MAPA_VTEC_ROTI)  # CONVERT_BIND
-        self.CB_DADOS_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKside="right", fill="x")
+        self.CB_DADOS_MAPA_VTEC_ROTI = ui.ttk.Combobox(self.Frame_propriedades_modelo_MAPA_VTEC_ROTI, width = 10, state = 'readonly', exportselection = False, values = ["VTEC", "ROT", "ROTI"])
+        self.CB_DADOS_MAPA_VTEC_ROTI.bind("<<ComboboxSelected>>", self.Set_Dados_MAPA_VTEC_ROTI)
+        self.CB_DADOS_MAPA_VTEC_ROTI.pack(side="right", fill="x")
 
         self.Frame_propriedades_MAPA_VTEC_ROTI = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_MAPA_VTEC_ROTI.pack(fill="x")
 
 
 
@@ -407,47 +408,47 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_MAPA_ROT = QWidget(self.Frame_propriedades_MAPA_VTEC_ROTI, bg = 'gray')
         self.Frame_propriedades_MAPA_ROT_Delta_Time = QWidget(self.Frame_propriedades_MAPA_ROT, bg = 'gray')
-        self.Frame_propriedades_MAPA_ROT_Delta_Time.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_MAPA_ROT_Delta_Time.pack(fill="x")
         QLabel(self.Frame_propriedades_MAPA_ROT_Delta_Time, text = 'ΔT (s) (ROT)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_Delta_Time_MAPA_ROT = QLineEdit(self.Frame_propriedades_MAPA_ROT_Delta_Time, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_Delta_Time_MAPA_ROT.insert(END, self.Dado_config.Settings["MAPA"]["fValueDelta_ROT"])
-        self.Entry_Delta_Time_MAPA_ROT.pack(  # CONVERT_PACKside="right")
+        self.Entry_Delta_Time_MAPA_ROT.pack(side="right")
 
         self.Frame_propriedades_MAPA_ROTI = QWidget(self.Frame_propriedades_MAPA_VTEC_ROTI, bg = 'gray')
         self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROT = QWidget(self.Frame_propriedades_MAPA_ROTI, bg = 'gray')
-        self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROT.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROT.pack(fill="x")
         QLabel(self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROT, text = 'ΔT (s) (ROT)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Delta_Time_MAPA_ROT = QLineEdit(self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROT, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Delta_Time_MAPA_ROT.insert(END, self.Dado_config.Settings["MAPA"]["fValueDelta_ROT"])
-        self.Entry_ROT_Delta_Time_MAPA_ROT.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Delta_Time_MAPA_ROT.pack(side="right")
         self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROTI = QWidget(self.Frame_propriedades_MAPA_ROTI, bg = 'gray')
-        self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROTI.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROTI.pack(fill="x")
         QLabel(self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROTI, text = 'ΔT (s) (ROTI)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROTI_Delta_Time_MAPA_ROTI = QLineEdit(self.Frame_propriedades_MAPA_ROTI_ROT_Delta_Time_ROTI, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROTI_Delta_Time_MAPA_ROTI.insert(END, str(self.Dado_config.Settings["MAPA"]["fValueDelta_ROTI"]))
-        self.Entry_ROTI_Delta_Time_MAPA_ROTI.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROTI_Delta_Time_MAPA_ROTI.pack(side="right")
 
 
         self.Frame_propriedades_modelo_MAPA_Xtick = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_Xtick.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_Xtick.pack(fill="x")
         QCheckBox(self.Frame_propriedades_modelo_MAPA_Xtick, text = "Manual Ticks X",variable=self.varx,onvalue=1,offvalue=0).pack(side="left", fill="both", expand = True)
         self.Entry_MAPA_Xtick = QLineEdit(self.Frame_propriedades_modelo_MAPA_Xtick, width = 20, validate = "key")
         self.Entry_MAPA_Xtick.insert(END,"-70,-50")
-        self.Entry_MAPA_Xtick.pack(  # CONVERT_PACKside="right")
+        self.Entry_MAPA_Xtick.pack(side="right")
 
         self.Frame_propriedades_modelo_MAPA_Ytick = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_Ytick.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_Ytick.pack(fill="x")
         QCheckBox(self.Frame_propriedades_modelo_MAPA_Ytick, text = "Manual Ticks Y",variable=self.vary,onvalue=1,offvalue=0).pack(side="left", fill="both", expand = True)
         self.Entry_MAPA_Ytick = QLineEdit(self.Frame_propriedades_modelo_MAPA_Ytick, width = 20, validate = "key")
         self.Entry_MAPA_Ytick.insert(END,"-60,-30,-0,30,60")
-        self.Entry_MAPA_Ytick.pack(  # CONVERT_PACKside="right")
+        self.Entry_MAPA_Ytick.pack(side="right")
 
         self.Frame_propriedades_modelo_MAPA_Abs = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_MAPA_Abs.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_MAPA_Abs.pack(fill="x")
         QCheckBox(self.Frame_propriedades_modelo_MAPA_Abs, text = "abs(ROT)",variable=self.varabs,onvalue=1,offvalue=0).pack(side="left", fill="both", expand = True)
         
         self.Frame_propriedades_MAPA_VIDEO = QWidget(self.Frame_propriedades_modelo_MAPA, bg = 'gray')
-        self.Frame_propriedades_MAPA_VIDEO.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_MAPA_VIDEO.pack(fill="x")
         QLabel(self.Frame_propriedades_MAPA_VIDEO, text = self.Dado_config.idioma(191), relief="groove").pack(side="left", fill="both", expand = True)
         QCheckBox(self.Frame_propriedades_MAPA_VIDEO, variable = self.Value_Check_VIDEO_MAPA, relief="ridge", bd = 2, width = 5).pack(side="right")
         QPushButton(self.Frame_propriedades_modelo_MAPA, text = self.Dado_config.idioma(175), relief="ridge", command = self.PLOTAR_GRAFICO_JANELA_TOPLEVEL_MODELO_GRAFICO_MAPA).pack(fill="x")
@@ -456,55 +457,55 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_modelo_PAINEL_MAPA = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_INICIO = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_INICIO.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_INICIO.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_INICIO, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.Calendario_Data_PAINEL_MAPA_Inicial = DateEntry(self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_INICIO, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 2)  
-        self.Calendario_Data_PAINEL_MAPA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_PAINEL_MAPA_Inicial.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_PAINEL_MAPA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_PAINEL_MAPA_Inicial.pack(fill="x")
         self.Frame_propriedades_modelo_PAINEL_MAPA_H_INICIO = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_H_INICIO.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_H_INICIO.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_H_INICIO, text = self.Dado_config.idioma(172), relief="groove").pack(side="left", fill="both", expand = True)
         self.PAINEL_MAPA_Time_INICIO = MaskedWidget(self.Frame_propriedades_modelo_PAINEL_MAPA_H_INICIO, 'fixed', mask='99:99:99', width = 10)
         self.PAINEL_MAPA_Time_INICIO.insert(0, '000000')
-        self.PAINEL_MAPA_Time_INICIO.pack(  # CONVERT_PACKside="right", fill="both")
+        self.PAINEL_MAPA_Time_INICIO.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_FIM = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_FIM.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_FIM.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_FIM, text = self.Dado_config.idioma(54)).pack(fill="x")
         self.Calendario_Data_PAINEL_MAPA_Final = DateEntry(self.Frame_propriedades_modelo_PAINEL_MAPA_DATA_FIM, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim, bg = 'darkblue', fg = 'white', borderwidth = 2)  
-        self.Calendario_Data_PAINEL_MAPA_Final.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_PAINEL_MAPA_Final.pack(fill="x")
         self.Frame_propriedades_modelo_PAINEL_MAPA_H_FIM = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_H_FIM.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_H_FIM.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_H_FIM, text = self.Dado_config.idioma(173), relief="groove").pack(side="left", fill="both", expand = True)
         self.PAINEL_MAPA_Time_FIM = MaskedWidget(self.Frame_propriedades_modelo_PAINEL_MAPA_H_FIM, 'fixed', mask='99:99:99', width = 10)
         self.PAINEL_MAPA_Time_FIM.insert(0, '240000')
-        self.PAINEL_MAPA_Time_FIM.pack(  # CONVERT_PACKside="right", fill="both")
+        self.PAINEL_MAPA_Time_FIM.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_PAINEL_MAPA_ELE = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_ELE.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_ELE.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_ELE, text = self.Dado_config.idioma(181), relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_PAINEL_MAPA_Filter_ELE = QLineEdit(self.Frame_propriedades_modelo_PAINEL_MAPA_ELE, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_PAINEL_MAPA_Filter_ELE.insert(END,self.Dado_config.Settings["PAINEL MAPA"]["fElevation_Filter"])
-        self.Entry_PAINEL_MAPA_Filter_ELE.pack(  # CONVERT_PACKside="right")
+        self.Entry_PAINEL_MAPA_Filter_ELE.pack(side="right")
         self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE, text = self.Dado_config.idioma(186), relief="groove").pack(side="left", fill="both", expand = True)
         self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA.pack(  # CONVERT_PACKside="right", fill="both")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA.pack(side="right", fill="both")
         self.PAINEL_MAPA_GRADE_LINHA = QLineEdit(self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA, width=5,validate = "key", validatecommand = vcmd_get_number,bd = 2)
         self.PAINEL_MAPA_GRADE_LINHA.insert(END, '5')
-        self.PAINEL_MAPA_GRADE_LINHA.pack(  # CONVERT_PACKside="left", fill="both")
+        self.PAINEL_MAPA_GRADE_LINHA.pack(side="left", fill="both")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA, text = "X", relief="groove").pack(side="left", fill="both", expand = True)
         self.PAINEL_MAPA_GRADE_COLUNA = QLineEdit(self.Frame_propriedades_modelo_PAINEL_MAPA_GRADE_COLUNA_LINHA,width=5,validate = "key", validatecommand = vcmd_get_number,bd = 2)
         self.PAINEL_MAPA_GRADE_COLUNA.insert(END, '6')
-        self.PAINEL_MAPA_GRADE_COLUNA.pack(  # CONVERT_PACKside="right", fill="both")
+        self.PAINEL_MAPA_GRADE_COLUNA.pack(side="right", fill="both")
         self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI, text = self.Dado_config.idioma(185), relief="groove").pack(side="left", fill="both", expand = True)
-        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI = tk.ttk.Combobox(self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI, width = 10, state = 'readonly', exportselection = False, values = ["VTEC","ROT","ROTI"])
-        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI.bind("<<ComboboxSelected>>", self.Set_Dados_PAINEL_MAPA_VTEC_ROTI)  # CONVERT_BIND
-        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKside="right", fill="x")
+        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI = ui.ttk.Combobox(self.Frame_propriedades_modelo_PAINEL_MAPA_VTEC_ROTI, width = 10, state = 'readonly', exportselection = False, values = ["VTEC","ROT","ROTI"])
+        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI.bind("<<ComboboxSelected>>", self.Set_Dados_PAINEL_MAPA_VTEC_ROTI)
+        self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI.pack(side="right", fill="x")
 
         self.Frame_propriedades_PAINEL_MAPA_VTEC_ROTI = QWidget(self.Frame_propriedades_modelo_PAINEL_MAPA, bg = 'gray')
-        self.Frame_propriedades_PAINEL_MAPA_VTEC_ROTI.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_PAINEL_MAPA_VTEC_ROTI.pack(fill="x")
 
         
         
@@ -516,25 +517,25 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_PAINEL_MAPA_ROT = QWidget(self.Frame_propriedades_PAINEL_MAPA_VTEC_ROTI, bg = 'gray')
         self.Frame_propriedades_PAINEL_MAPA_ROT_Delta_Time_ROT = QWidget(self.Frame_propriedades_PAINEL_MAPA_ROT, bg = 'gray')
-        self.Frame_propriedades_PAINEL_MAPA_ROT_Delta_Time_ROT.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_PAINEL_MAPA_ROT_Delta_Time_ROT.pack(fill="x")
         QLabel(self.Frame_propriedades_PAINEL_MAPA_ROT_Delta_Time_ROT, text = 'ΔT (s) (ROT)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_Delta_Time_PAINEL_MAPA_ROT = QLineEdit(self.Frame_propriedades_PAINEL_MAPA_ROT_Delta_Time_ROT, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_Delta_Time_PAINEL_MAPA_ROT.insert(END, self.Dado_config.Settings["PAINEL MAPA"]["fValueDelta_ROT"])
-        self.Entry_Delta_Time_PAINEL_MAPA_ROT.pack(  # CONVERT_PACKside="right")
+        self.Entry_Delta_Time_PAINEL_MAPA_ROT.pack(side="right")
 
         self.Frame_propriedades_PAINEL_MAPA_ROTI = QWidget(self.Frame_propriedades_PAINEL_MAPA_VTEC_ROTI, bg = 'gray')
         self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROT = QWidget(self.Frame_propriedades_PAINEL_MAPA_ROTI, bg = 'gray')
-        self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROT.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROT.pack(fill="x")
         QLabel(self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROT, text = 'ΔT (s) (ROT)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Delta_Time_PAINEL_MAPA_ROT = QLineEdit(self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROT, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Delta_Time_PAINEL_MAPA_ROT.insert(END, self.Dado_config.Settings["PAINEL MAPA"]["fValueDelta_ROT"])
-        self.Entry_ROT_Delta_Time_PAINEL_MAPA_ROT.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Delta_Time_PAINEL_MAPA_ROT.pack(side="right")
         self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROTI = QWidget(self.Frame_propriedades_PAINEL_MAPA_ROTI, bg = 'gray')
-        self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROTI.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROTI.pack(fill="x")
         QLabel(self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROTI, text = 'ΔT (s) (ROTI)', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROTI_Delta_Time_PAINEL_MAPA_ROTI = QLineEdit(self.Frame_propriedades_PAINEL_MAPA_ROTI_ROT_Delta_Time_ROTI, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROTI_Delta_Time_PAINEL_MAPA_ROTI.insert(END, str(self.Dado_config.Settings["PAINEL MAPA"]["fValueDelta_ROTI"]))
-        self.Entry_ROTI_Delta_Time_PAINEL_MAPA_ROTI.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROTI_Delta_Time_PAINEL_MAPA_ROTI.pack(side="right")
 
         QPushButton(self.Frame_propriedades_modelo_PAINEL_MAPA, text = self.Dado_config.idioma(175), relief="ridge", command = self.PLOTAR_GRAFICO_JANELA_TOPLEVEL_MODELO_GRAFICO_PAINEL_MAPA).pack(fill="x")
         QPushButton(self.Frame_propriedades_modelo_PAINEL_MAPA, text = self.Dado_config.idioma(108), relief="ridge", command = self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO).pack(fill="x")
@@ -542,75 +543,75 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_modelo_ROT = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_ROT_Entry = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_ROT_Entry.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_Entry.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_Entry, text = self.Dado_config.idioma(107)).pack(fill="x")
         self.Calendario_Data_ROT_Inicial = DateEntry(self.Frame_propriedades_modelo_ROT_Entry, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 2)
-        self.Calendario_Data_ROT_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_ROT_Inicial.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_ROT_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_ROT_Inicial.pack(fill="x")
         self.Frame_propriedades_modelo_ROT_Check = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_Check.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_Check.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_Check, text = self.Dado_config.idioma(167), relief="groove").pack(side="left", fill="both", expand = True)
         QCheckBox(self.Frame_propriedades_modelo_ROT_Check, relief="groove", variable = self.Value_Line_Cores, width = 5,command=self.activateROTLegend).pack(side="right")
         self.Frame_propriedades_modelo_ROT_Check_Legenda_LOCAL = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_Check_Legenda_LOCAL.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_Check_Legenda_LOCAL.pack(fill="x")
         self.Frame_propriedades_modelo_ROT_Check_Legenda = QWidget(self.Frame_propriedades_modelo_ROT_Check_Legenda_LOCAL, bg = 'gray')
         QLabel(self.Frame_propriedades_modelo_ROT_Check_Legenda, text = self.Dado_config.idioma(134), relief="groove").pack(side="left", fill="both", expand = True)
         QCheckBox(self.Frame_propriedades_modelo_ROT_Check_Legenda, relief="groove", variable = self.Value_State_Legenda, width = 5).pack(side="right")
         self.Frame_propriedades_modelo_ROT_D_TIME = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_D_TIME.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_D_TIME.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_D_TIME, text = 'ΔT (s) ROT', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Delta_Time_ROT = QLineEdit(self.Frame_propriedades_modelo_ROT_D_TIME, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Delta_Time_ROT.insert(END, self.Dado_config.Settings["ROT"]["fValueDelta_ROT"])
-        self.Entry_ROT_Delta_Time_ROT.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Delta_Time_ROT.pack(side="right")
 
         
         self.Frame_propriedades_modelo_ROTI_D_TIME = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROTI_D_TIME.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROTI_D_TIME.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROTI_D_TIME, text = 'ΔT (s) ROTI', relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Delta_Time_ROTI = QLineEdit(self.Frame_propriedades_modelo_ROTI_D_TIME, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Delta_Time_ROTI.insert(END, self.Dado_config.Settings["ROT"]["fValueDelta_ROTI"])
-        self.Entry_ROT_Delta_Time_ROTI.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Delta_Time_ROTI.pack(side="right")
         
         self.Frame_propriedades_modelo_ROT_ELE = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_ELE.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_ELE.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_ELE, text = self.Dado_config.idioma(181), relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Filter_ELE = QLineEdit(self.Frame_propriedades_modelo_ROT_ELE, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Filter_ELE.insert(END, self.Dado_config.Settings["ROT"]["fElevation_Filter"])
-        self.Entry_ROT_Filter_ELE.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Filter_ELE.pack(side="right")
         self.Frame_propriedades_modelo_ROT_FATOR_MULTIPLICACAO = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_FATOR_MULTIPLICACAO.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_FATOR_MULTIPLICACAO.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_FATOR_MULTIPLICACAO, text = self.Dado_config.idioma(187), relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_Filter_FATOR_MULTIPLICACAO = QLineEdit(self.Frame_propriedades_modelo_ROT_FATOR_MULTIPLICACAO, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_Filter_FATOR_MULTIPLICACAO.insert(END, self.Dado_config.Settings["ROT"]["fValueMultFactor_ROT"])
-        self.Entry_ROT_Filter_FATOR_MULTIPLICACAO.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_Filter_FATOR_MULTIPLICACAO.pack(side="right")
         
 
 
 
         self.Frame_propriedades_modelo_ROT_TIPO = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
         QLabel(self.Frame_propriedades_modelo_ROT_TIPO, text = self.Dado_config.idioma(185), relief="groove").pack(side="left", fill="both", expand = True)
-        self.CB_DADOS_ROT = tk.ttk.Combobox(self.Frame_propriedades_modelo_ROT_TIPO, width = 10, state = 'readonly', exportselection = False, values = ["VTEC","ROT","ROTI"])
-        self.CB_DADOS_ROT.bind("<<ComboboxSelected>>", self.Set_Dados_ROT)  # CONVERT_BIND
-        self.CB_DADOS_ROT.pack(  # CONVERT_PACKside="right", fill="x")
-        self.Frame_propriedades_modelo_ROT_TIPO.pack(  # CONVERT_PACKfill="x")
+        self.CB_DADOS_ROT = ui.ttk.Combobox(self.Frame_propriedades_modelo_ROT_TIPO, width = 10, state = 'readonly', exportselection = False, values = ["VTEC","ROT","ROTI"])
+        self.CB_DADOS_ROT.bind("<<ComboboxSelected>>", self.Set_Dados_ROT)
+        self.CB_DADOS_ROT.pack(side="right", fill="x")
+        self.Frame_propriedades_modelo_ROT_TIPO.pack(fill="x")
 
         self.Frame_propriedades_modelo_ROT_SF = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_SF.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_SF.pack(fill="x")
         QCheckBox(self.Frame_propriedades_modelo_ROT_SF, text = "ROT spread",variable=self.rots,onvalue=1,offvalue=0).pack(side="left", fill="both", expand = True)
 
         self.Frame_propriedades_modelo_ROT_XMinortick = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_XMinortick.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_XMinortick.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_XMinortick, text = "Qtde_Xminor", relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_XMinor = QLineEdit(self.Frame_propriedades_modelo_ROT_XMinortick, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_XMinor.insert(END,"4")
-        self.Entry_ROT_XMinor.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_XMinor.pack(side="right")
 
         self.Frame_propriedades_modelo_ROT_YMinortick = QWidget(self.Frame_propriedades_modelo_ROT, bg = 'gray')
-        self.Frame_propriedades_modelo_ROT_YMinortick.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ROT_YMinortick.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ROT_YMinortick, text = "Qtde_Yminor", relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ROT_YMinor = QLineEdit(self.Frame_propriedades_modelo_ROT_YMinortick, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ROT_YMinor.insert(END,"4")
-        self.Entry_ROT_YMinor.pack(  # CONVERT_PACKside="right")
+        self.Entry_ROT_YMinor.pack(side="right")
         
 
         QPushButton(self.Frame_propriedades_modelo_ROT, text = self.Dado_config.idioma(108), relief = 'ridge', command = self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO).pack(fill="both", expand = True)
@@ -618,24 +619,24 @@ class Main_UTECDA(QWidget):
 
         self.Frame_propriedades_modelo_EIA = QWidget(self.Left_Frame.interior, bd = 3, bg = 'gray', relief="groove")
         self.Frame_propriedades_modelo_EIA_Entry = QWidget(self.Frame_propriedades_modelo_EIA, bg = 'gray')
-        self.Frame_propriedades_modelo_EIA_Entry.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_EIA_Entry.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_EIA, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.Calendario_Data_EIA_Inicial = DateEntry(self.Frame_propriedades_modelo_EIA, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 2)
-        self.Calendario_Data_EIA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_EIA_Inicial.pack(  # CONVERT_PACKfill="x")
+        self.Calendario_Data_EIA_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_EIA_Inicial.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_EIA, text = self.Dado_config.idioma(54)).pack(fill="x")
         DateEntry(self.Frame_propriedades_modelo_EIA, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim, bg = 'darkblue', fg = 'white', borderwidth = 2).pack(fill="x")
         self.Frame_propriedades_modelo_EIA_Check = QWidget(self.Frame_propriedades_modelo_EIA, bg = 'gray')
-        self.Frame_propriedades_modelo_EIA_Check.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_EIA_Check.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_EIA_Check, text = self.Dado_config.idioma(109), relief="groove").pack(side="left", fill="both", expand = True)
         QCheckBox(self.Frame_propriedades_modelo_EIA_Check, variable = self.Value_station_on_TICK, width = 5 ).pack(side="right")
         self.Frame_propriedades_modelo_EIA_eixoY = QWidget(self.Frame_propriedades_modelo_EIA, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_EIA_eixoY.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_EIA_eixoY.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_EIA_eixoY, text = self.Dado_config.idioma(120), relief="groove").pack(fill="x")
         QRadioButton(self.Frame_propriedades_modelo_EIA_eixoY, variable = self.Value_Lat_Dip_axes_Y, value = 0, text = 'Latitude', relief="groove").pack(side="right", fill="x", expand = True)
         QRadioButton(self.Frame_propriedades_modelo_EIA_eixoY, variable = self.Value_Lat_Dip_axes_Y, value = 1, text = 'Dip.Lat', relief="groove").pack(side="left", fill="x", expand = True)
         self.Frame_propriedades_modelo_EIA_btn = QWidget(self.Frame_propriedades_modelo_EIA, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_EIA_btn.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_EIA_btn.pack(fill="x")
         QPushButton(self.Frame_propriedades_modelo_EIA_btn, text = self.Dado_config.idioma(108), relief="ridge", command = self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO).pack(fill="x")
 
 
@@ -643,35 +644,35 @@ class Main_UTECDA(QWidget):
         
         QLabel(self.Frame_propriedades_modelo_ONDAS, text = self.Dado_config.idioma(53)).pack(fill="x")
         self.Calendario_Data_ONDAS_Inicial = DateEntry(self.Frame_propriedades_modelo_ONDAS, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_inicio, bg = 'darkblue', fg = 'white', borderwidth = 1)
-        self.Calendario_Data_ONDAS_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)  # CONVERT_BIND
-        self.Calendario_Data_ONDAS_Inicial.pack(  # CONVERT_PACKfill="both", expand = True)
+        self.Calendario_Data_ONDAS_Inicial.bind('<<DateEntrySelected>>', self.Atualizar_DIP_Listabx_Station_OBS)
+        self.Calendario_Data_ONDAS_Inicial.pack(fill="both", expand = True)
         QLabel(self.Frame_propriedades_modelo_ONDAS , text = self.Dado_config.idioma(54)).pack(fill="x")
         DateEntry(self.Frame_propriedades_modelo_ONDAS, locale = "pt_BR", date_pattern ="dd/mm/yyyy", textvariable = self.Value_DATA_entry_main_fim, bg = 'darkblue', fg = 'white', borderwidth = 1).pack(fill="both", expand = True)
         self.Frame_propriedades_modelo_ONDAS_Recursos = QWidget(self.Frame_propriedades_modelo_ONDAS, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_ONDAS_Recursos.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ONDAS_Recursos.pack(fill="x")
         self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia = QWidget(self.Frame_propriedades_modelo_ONDAS, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia.pack(fill="x")
         self.Frame_propriedades_modelo_ONDAS_Recursos_Legendas = QWidget(self.Frame_propriedades_modelo_ONDAS, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_ONDAS_Recursos_Legendas.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ONDAS_Recursos_Legendas.pack(fill="x")
         self.Frame_propriedades_modelo_ONDAS_Recursos_PLOT = QWidget(self.Frame_propriedades_modelo_ONDAS, bd = 3, bg = 'gray', relief="groove")
-        self.Frame_propriedades_modelo_ONDAS_Recursos_PLOT.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ONDAS_Recursos_PLOT.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia, text = self.Dado_config.idioma(130), relief="groove").pack(side="top", fill="x")
         QRadioButton(self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 1, text = self.Dado_config.idioma(40)).pack(side="left", fill="x", expand = True)
         QRadioButton(self.Frame_propriedades_modelo_ONDAS_Recursos_Formato_dia, variable = self.Value_Formato_DATA_Grafico, relief="groove", value = 0, text = self.Dado_config.idioma(131)).pack(side="right", fill="x", expand = True)
         QLabel(self.Frame_propriedades_modelo_ONDAS_Recursos_Legendas, text = self.Dado_config.idioma(134), relief="groove").pack(side="left", fill="both")
         QCheckBox(self.Frame_propriedades_modelo_ONDAS_Recursos_Legendas, variable = self.Value_State_Legenda).pack(fill="x", expand = True, side="left")
         self.Frame_propriedades_modelo_ONDAS_CORTE = QWidget(self.Frame_propriedades_modelo_ONDAS_Recursos, bg = 'gray')
-        self.Frame_propriedades_modelo_ONDAS_CORTE.pack(  # CONVERT_PACKfill="x")
+        self.Frame_propriedades_modelo_ONDAS_CORTE.pack(fill="x")
         QLabel(self.Frame_propriedades_modelo_ONDAS_CORTE, text = "Time", relief="groove").pack(side="left", fill="both", expand = True)
         self.Entry_ONDAS_CORTE = QLineEdit(self.Frame_propriedades_modelo_ONDAS_CORTE, width = 10, validate = "key", validatecommand = vcmd_get_number)
         self.Entry_ONDAS_CORTE.insert(END,"18")
-        self.Entry_ONDAS_CORTE.pack(  # CONVERT_PACKside="right")
+        self.Entry_ONDAS_CORTE.pack(side="right")
         QPushButton(self.Frame_propriedades_modelo_ONDAS_Recursos_PLOT, text = self.Dado_config.idioma(108), relief="ridge", command = self.THREAD_PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO).pack(fill="x")
 
 
 
         self.Right_Frame = QWidget(self, relief="ridge", bg = 'gray')
-        self.Right_Frame.pack(  # CONVERT_PACKfill="both", expand = True)
+        self.Right_Frame.pack(fill="both", expand = True)
 
 
         self.FIGURA_MAPA_PRINCIPAL = plt.figure()
@@ -685,11 +686,11 @@ class Main_UTECDA(QWidget):
         self.AXES_MAPA_PRINCIPAL.add_feature(cfeature.LAKES, alpha = 0.5)
         self.AXES_MAPA_PRINCIPAL.add_feature(cfeature.RIVERS)
         self.CANVAS_MAPA_PRINCIPAL = FigureCanvas(self.FIGURA_MAPA_PRINCIPAL, self.Right_Frame)
-        self.CANVAS_MAPA_PRINCIPAL.get_tk_widget().pack(fill="both", expand = True)
+        self.CANVAS_MAPA_PRINCIPAL.get_widget().pack(fill="both", expand = True)
         
         self.FIGURA_MAPA_PRINCIPAL.subplots_adjust(top=1,right=1)
         self.FIGURA_MAPA_PRINCIPAL.tight_layout(pad = .1)
-        self.CANVAS_MAPA_PRINCIPAL._tkcanvas.pack(  # CONVERT_PACKside="bottom", fill="both", expand = True)
+        self.CANVAS_MAPA_PRINCIPAL._qt_canvas.pack(side="bottom", fill="both", expand = True)
         if not self.License_val.get():
             img = Image.open(self.uti.resource_path('img\icone.ico')).rotate(0)
             self.AXES_MAPA_PRINCIPAL.imshow(img, extent = (-50, 50, -50, 50))
@@ -705,22 +706,22 @@ class Main_UTECDA(QWidget):
             
             self.TOOLBAR_MAPA_PRINCIPAL = TopNavigationToolbar(self.CANVAS_MAPA_PRINCIPAL, self.Right_Frame)
             self.TOOLBAR_MAPA_PRINCIPAL.update()
-            self.TOOLBAR_MAPA_PRINCIPAL.pack(  # CONVERT_PACKside="top", fill="x")
+            self.TOOLBAR_MAPA_PRINCIPAL.pack(side="top", fill="x")
             self.IMAGE_GOOGLE_KMZ= PhotoImage.from_pil(self, (Image.open(self.uti.resource_path("img/earth.png"))).resize((25,25), Image.LANCZOS))
             BUTTON_KML_TOOLBAR_MAPA_PRINCIPAL = QPushButton(master=self.TOOLBAR_MAPA_PRINCIPAL,image = self.IMAGE_GOOGLE_KMZ,command= self.start_gerar_GOOGLE_KMZ)
-            BUTTON_KML_TOOLBAR_MAPA_PRINCIPAL.pack(  # CONVERT_PACKside="left")
+            BUTTON_KML_TOOLBAR_MAPA_PRINCIPAL.pack(side="left")
             ToolTip.createToolTip(BUTTON_KML_TOOLBAR_MAPA_PRINCIPAL, "Generate kml from map")
             self.IMAGE_SIGLAS_MAPA= PhotoImage.from_pil(self, (Image.open(self.uti.resource_path("img/est.png"))).resize((25,25), Image.LANCZOS))
             BUTTON_SIGLAS_MAPA_MAPA_PRINCIPAL = QPushButton(master=self.TOOLBAR_MAPA_PRINCIPAL,image = self.IMAGE_SIGLAS_MAPA,command= self.tool_start_siglas_mapa)
-            BUTTON_SIGLAS_MAPA_MAPA_PRINCIPAL.pack(  # CONVERT_PACKside="left")
+            BUTTON_SIGLAS_MAPA_MAPA_PRINCIPAL.pack(side="left")
             ToolTip.createToolTip(BUTTON_SIGLAS_MAPA_MAPA_PRINCIPAL, "Show/Hide Acronyms on Map")
             self.IMAGE_SAVE_MAPA= PhotoImage.from_pil(self, (Image.open(self.uti.resource_path("img/mapa.png"))).resize((25,25), Image.LANCZOS))
             BUTTON_SAVE_TOOLBAR_MAPA_PRINCIPAL = QPushButton(master=self.TOOLBAR_MAPA_PRINCIPAL,image = self.IMAGE_SAVE_MAPA,command= self.save_extends_MAPA_PRINCIPAL)
-            BUTTON_SAVE_TOOLBAR_MAPA_PRINCIPAL.pack(  # CONVERT_PACKside="left")
+            BUTTON_SAVE_TOOLBAR_MAPA_PRINCIPAL.pack(side="left")
             ToolTip.createToolTip(BUTTON_SAVE_TOOLBAR_MAPA_PRINCIPAL, "Map Registration")
             self.IMAGE_DEL_MAPA= PhotoImage.from_pil(self, (Image.open(self.uti.resource_path("img/mapa-del.png"))).resize((25,25), Image.LANCZOS))
             BUTTON_DEL_TOOLBAR_MAPA_PRINCIPAL = QPushButton(master=self.TOOLBAR_MAPA_PRINCIPAL,image = self.IMAGE_DEL_MAPA,command= self.del_extends_MAPA_PRINCIPAL)
-            BUTTON_DEL_TOOLBAR_MAPA_PRINCIPAL.pack(  # CONVERT_PACKside="left")
+            BUTTON_DEL_TOOLBAR_MAPA_PRINCIPAL.pack(side="left")
             ToolTip.createToolTip(BUTTON_DEL_TOOLBAR_MAPA_PRINCIPAL, "Del Registered Map")
 
 
@@ -754,46 +755,46 @@ class Main_UTECDA(QWidget):
             self.Clear_SELECTION_Plot_SCATTER_and_Listbx()
             self.Listbx_Stations_OBS.configure(selectmode = "single", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_SINGLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_INDIVIDUAL.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)
+            self.Frame_propriedades_modelo_INDIVIDUAL.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_INDIVIDUAL
         elif self.Value_cb_Modelo_Grafico.get() == "EIA (STD)":
             self.Listbx_Stations_OBS.configure(selectmode = "multiple", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_MULTIPLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_EIA.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)
+            self.Frame_propriedades_modelo_EIA.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_EIA
         elif self.Value_cb_Modelo_Grafico.get() == "Desvio (STD)":
             self.Listbx_Stations_OBS.configure(selectmode = "multiple", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_MULTIPLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_DESVIO.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)
+            self.Frame_propriedades_modelo_DESVIO.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_DESVIO
         elif self.Value_cb_Modelo_Grafico.get() == "Mapa VTEC/ROTI (CMN)":
             self.Listbx_Stations_OBS.configure(selectmode = "multiple", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_MULTIPLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_MAPA.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_MULTIPLE)
+            self.Frame_propriedades_modelo_MAPA.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_MAPA
         elif self.Value_cb_Modelo_Grafico.get() == "Painel Mapa VTEC/ROTI (CMN)":
             self.Clear_SELECTION_Plot_SCATTER_and_Listbx()
             self.Listbx_Stations_OBS.configure(selectmode = "multiple", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_SINGLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_PAINEL_MAPA.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)
+            self.Frame_propriedades_modelo_PAINEL_MAPA.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_PAINEL_MAPA
         elif self.Value_cb_Modelo_Grafico.get() == "ROT/VTEC (CMN)":
             self.Clear_SELECTION_Plot_SCATTER_and_Listbx()
             self.Listbx_Stations_OBS.configure(selectmode = "single", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_SINGLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_ROT.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)
+            self.Frame_propriedades_modelo_ROT.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_ROT
         elif self.Value_cb_Modelo_Grafico.get() == "ONDAS (STD)":
             self.Listbx_Stations_OBS.configure(selectmode = "single", state = "normal")
             self.ID_Connection_MPL_CANVAS_MAPA_PRINCIPAL = self.AXES_MAPA_PRINCIPAL.figure.canvas.mpl_connect("pick_event", self.Pick_Event_MAPA_PRINCIPAL_SINGLE)
-            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)  # CONVERT_BIND
-            self.Frame_propriedades_modelo_ONDAS.pack(  # CONVERT_PACKfill="x")
+            self.Listbx_Stations_OBS.bind("<<ListboxSelect>>", self.Selecionar_Station_MAPA_SINGLE)
+            self.Frame_propriedades_modelo_ONDAS.pack(fill="x")
             self.Menu_de_Propriedades_dos_Graficos_atual = self.Frame_propriedades_modelo_ONDAS
 
     def MAPA_Get_extent_with_zoom(self):
@@ -817,17 +818,17 @@ class Main_UTECDA(QWidget):
             self.Frame_propriedades_MAPA_VTEC.pack_forget()
             self.Frame_propriedades_MAPA_ROTI.pack_forget()
             self.Frame_propriedades_MAPA_ROT.pack_forget()
-            if valor_combo_mapa_VTEC_ROTI == "VTEC":self.Frame_propriedades_MAPA_VTEC.pack(  # CONVERT_PACKfill="x")
-            elif valor_combo_mapa_VTEC_ROTI == "ROT":self.Frame_propriedades_MAPA_ROT.pack(  # CONVERT_PACKfill="x")
-            elif valor_combo_mapa_VTEC_ROTI == "ROTI":self.Frame_propriedades_MAPA_ROTI.pack(  # CONVERT_PACKfill="x")
+            if valor_combo_mapa_VTEC_ROTI == "VTEC":self.Frame_propriedades_MAPA_VTEC.pack(fill="x")
+            elif valor_combo_mapa_VTEC_ROTI == "ROT":self.Frame_propriedades_MAPA_ROT.pack(fill="x")
+            elif valor_combo_mapa_VTEC_ROTI == "ROTI":self.Frame_propriedades_MAPA_ROTI.pack(fill="x")
     
     def Set_Dados_PAINEL_MAPA_VTEC_ROTI(self, *event, Mapa=None):
         valor_combo_painel_mapa_VTEC_ROTI = self.CB_DADOS_PAINEL_MAPA_VTEC_ROTI.get()
         if valor_combo_painel_mapa_VTEC_ROTI:
             self.Frame_propriedades_PAINEL_MAPA_ROT.pack_forget()
             self.Frame_propriedades_PAINEL_MAPA_ROTI.pack_forget()
-            if valor_combo_painel_mapa_VTEC_ROTI == "ROT":self.Frame_propriedades_PAINEL_MAPA_ROT.pack(  # CONVERT_PACKfill="x")
-            elif valor_combo_painel_mapa_VTEC_ROTI == "ROTI":self.Frame_propriedades_PAINEL_MAPA_ROTI.pack(  # CONVERT_PACKfill="x")
+            if valor_combo_painel_mapa_VTEC_ROTI == "ROT":self.Frame_propriedades_PAINEL_MAPA_ROT.pack(fill="x")
+            elif valor_combo_painel_mapa_VTEC_ROTI == "ROTI":self.Frame_propriedades_PAINEL_MAPA_ROTI.pack(fill="x")
     def Set_Dados_ROT(self, *event, Mapa=None):
         valor_combo_painel_mapa_VTEC_ROTI = self.CB_DADOS_ROT.get()
 
@@ -948,7 +949,7 @@ class Main_UTECDA(QWidget):
             
 
     def activateROTLegend(self):
-        if self.Value_Line_Cores.get():self.Frame_propriedades_modelo_ROT_Check_Legenda.pack(  # CONVERT_PACKfill="x")
+        if self.Value_Line_Cores.get():self.Frame_propriedades_modelo_ROT_Check_Legenda.pack(fill="x")
         else:self.Frame_propriedades_modelo_ROT_Check_Legenda.pack_forget()
 
     def call_windows(self, UI_id):
@@ -1034,7 +1035,7 @@ class Main_UTECDA(QWidget):
             Fano=False
 
     def Selecionar_Dir_Data(self, File_dir = None):
-        if not File_dir:File_dir = tk.filedialog.askdirectory(initialdir = "c:/", title = self.Dado_config.idioma(40), parent = self.master)
+        if not File_dir:File_dir = ui.filedialog.askdirectory(initialdir = "c:/", title = self.Dado_config.idioma(40), parent = self.master)
         if (File_dir and not File_dir == self.filedir.get()) or (File_dir and self.habilitar_DIP_lista_estacoes.get()):
             self.filedir.set(File_dir)
             Listbx_Stations_OBS_desabilitada = False
@@ -1143,7 +1144,7 @@ class Main_UTECDA(QWidget):
                 elif graph in ("Painel Mapa VTEC/ROTI (CMN)","PAINEL MAPA"):self.PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO_PAINEL_MAPA()
                 elif graph in ("ROT/VTEC (CMN)" ,"ROT"):self.PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ROT()
                 elif graph in ("ONDAS (STD)" ,"ONDAS"):self.PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ONDAS()
-        else:tk.messagebox.showerror(self.Dado_config.idioma(49),self.Dado_config.idioma(126), parent = self.master)
+        else:ui.messagebox.showerror(self.Dado_config.idioma(49),self.Dado_config.idioma(126), parent = self.master)
 
     def PLOTAR_GRAFICO_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL(self):
         IDS_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL = self.Listbx_Stations_OBS.curselection()
@@ -1153,7 +1154,7 @@ class Main_UTECDA(QWidget):
                 data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL = datetime.strptime(self.Value_DATA_entry_main_inicio.get(), '%d/%m/%Y')
                 data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL = datetime.strptime(self.Value_DATA_entry_main_fim.get(), '%d/%m/%Y')
             except ValueError:
-                tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+                ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
                 return False
             self.GRAFICO_Individual = COMP_INDV(self.FIGURA_TOPLEVEL_GRAFICO, SIGLA_ESTACAO_FIGURA_TOPLEVEL_GRAFICO_INDIVIDUAL, data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL, data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_INDIVIDUAL, self.filedir.get(), self.Value_Formato_DATA_Grafico,self.Dado_config)
             self.GRAFICO_Individual._set_Matplotlib_grafico()
@@ -1172,7 +1173,7 @@ class Main_UTECDA(QWidget):
                 self.data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA = datetime.strptime(self.Value_DATA_entry_main_inicio.get(), '%d/%m/%Y')
                 self.data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA = datetime.strptime(self.Value_DATA_entry_main_fim.get(), '%d/%m/%Y')
             except ValueError:
-                tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+                ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
                 return False
             self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA = []
             for iten_id in IDS_JANELA_TOPLEVEL_GRAFICO_EIA:
@@ -1195,7 +1196,7 @@ class Main_UTECDA(QWidget):
             data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_DESVIO = datetime.strptime(self.Value_DATA_entry_main_inicio.get(), '%d/%m/%Y')
             data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_DESVIO = datetime.strptime(self.Value_DATA_entry_main_fim.get(), '%d/%m/%Y')
         except ValueError:
-            tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+            ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
             return False
 
         self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_DESVIO = []	
@@ -1228,7 +1229,7 @@ class Main_UTECDA(QWidget):
             data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ONDAS = datetime.strptime(self.Value_DATA_entry_main_inicio.get(), '%d/%m/%Y')
             data_Final_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ONDAS = datetime.strptime(self.Value_DATA_entry_main_fim.get(), '%d/%m/%Y')
         except ValueError:
-            tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+            ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
             return False
 
         self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ONDAS = []	
@@ -1313,7 +1314,7 @@ class Main_UTECDA(QWidget):
                 
                 
                 
-                AX_MODELO_GRAFICO_PAINEL_MAPA_N.grid(  # CONVERT_GRID'on')
+                AX_MODELO_GRAFICO_PAINEL_MAPA_N.grid('on')
                 transform = ccrs.PlateCarree()._as_mpl_transform(AX_MODELO_GRAFICO_PAINEL_MAPA_N)
                 AX_MODELO_GRAFICO_PAINEL_MAPA_N.annotate(str(Data.time())[:8], xy=(_extend_LAT_LONG[0], _extend_LAT_LONG[2]), xycoords=transform, color='black', ha='left', va='bottom')
                 contL=contL+1;contC=contC+1
@@ -1339,11 +1340,11 @@ class Main_UTECDA(QWidget):
                 data_GRAFICO_JANELA_TOPLEVEL_GRAFICO_PAINEL_MAPA_Inicio = datetime.strptime("%s %s"%(self.Value_DATA_entry_main_inicio.get(),hora_inicio), '%d/%m/%Y %H:%M:%S')
                 data_GRAFICO_JANELA_TOPLEVEL_GRAFICO_PAINEL_MAPA_Fim = datetime.strptime("%s %s"%(self.Value_DATA_entry_main_fim.get(),hora_fim), '%d/%m/%Y %H:%M:%S')
             except ValueError:
-                tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+                ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
                 return False
-            self.VAR_BARRA_LOADING_GRAFICO_PAINEL_MAPA = tk.DoubleVar(self)
-            self.VAR_BARRA_LOADING_LABEL_GRAFICO_PAINEL_MAPA = tk.StringVar(self)
-            self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA = tk.BooleanVar(self)
+            self.VAR_BARRA_LOADING_GRAFICO_PAINEL_MAPA = ui.DoubleVar(self)
+            self.VAR_BARRA_LOADING_LABEL_GRAFICO_PAINEL_MAPA = ui.StringVar(self)
+            self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA = ui.BooleanVar(self)
             self.VAR_PROCESSO_GRAFICO_PAINEL_MAPA.set(False)
 
             if float(self.Entry_PAINEL_MAPA_Filter_ELE.get().replace(',','.')) != self.Dado_config.Settings["PAINEL MAPA"]["fElevation_Filter"]:self.Dado_config.Settings["PAINEL MAPA"]["fElevation_Filter"] = float(self.Entry_PAINEL_MAPA_Filter_ELE.get().replace(',','.'))
@@ -1428,7 +1429,7 @@ class Main_UTECDA(QWidget):
                 for i in range(len(y)):
                     y[i]=int(y[i])
                 gl.ylocator = mticker.FixedLocator(y)
-            AX_MODELO_GRAFICO_MAPA.grid(  # CONVERT_GRID'on')
+            AX_MODELO_GRAFICO_MAPA.grid('on')
             
             ticks = np.linspace(_vm_min,_vm_max,int(_ticks_cbar))
             
@@ -1474,10 +1475,10 @@ class Main_UTECDA(QWidget):
                 data_GRAFICO_JANELA_TOPLEVEL_GRAFICO_MAPA_Inicio = datetime.strptime("%s %s"%(self.Value_DATA_entry_main_inicio.get(),hora_inicio), '%d/%m/%Y %H:%M:%S')
                 data_GRAFICO_JANELA_TOPLEVEL_GRAFICO_MAPA_Fim = datetime.strptime("%s %s"%(self.Value_DATA_entry_main_fim.get(),hora_fim), '%d/%m/%Y %H:%M:%S')
             except ValueError:
-                tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
+                ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(176), parent = self.master)
                 return False
-            self.VAR_BARRA_LOADING_GRAFICO_MAPA = tk.DoubleVar(self)
-            self.VAR_BARRA_LOADING_LABEL_GRAFICO_MAPA = tk.StringVar(self)
+            self.VAR_BARRA_LOADING_GRAFICO_MAPA = ui.DoubleVar(self)
+            self.VAR_BARRA_LOADING_LABEL_GRAFICO_MAPA = ui.StringVar(self)
 
             intervalo_MAPA = self.MAPA_Delta_Time.get().replace(',','.')
             if float(self.Entry_MAPA_Filter_ELE.get().replace(',','.')) != self.Dado_config.Settings["MAPA"]["fElevation_Filter"]:
@@ -1541,7 +1542,7 @@ class Main_UTECDA(QWidget):
             dados= self.CB_DADOS_ROT.get()
             try:self.data_Inicial_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ROT = datetime.strptime(self.Value_DATA_entry_main_inicio.get(), '%d/%m/%Y')
             except ValueError:
-                tk.messagebox.showerror(self.Dado_config.idioma(49),self.Dado_config.idioma(176), parent = self.master)
+                ui.messagebox.showerror(self.Dado_config.idioma(49),self.Dado_config.idioma(176), parent = self.master)
                 return False
             self.SIGLAS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_ROT = self.Listbx_Stations_OBS.get(ids).replace("(","").replace(",","").split(" ")
             if float(self.Entry_ROT_Filter_ELE.get().replace(',','.')) != self.Dado_config.Settings["ROT"]["fElevation_Filter"]:self.Dado_config.Settings["ROT"]["fElevation_Filter"] = float(self.Entry_ROT_Filter_ELE.get().replace(',','.'))
@@ -1609,7 +1610,7 @@ class Main_UTECDA(QWidget):
                 try:
                     mediaTEC = sum(tmp_media)/float(len(tmp_media))
                 except ZeroDivisionError:
-                    tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(94), parent = self.master)
+                    ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(94), parent = self.master)
                     raise IOError
                 des_std = np.std(tmp_media)
                 Matriz_std+=(("%06.3f\t")%(mediaTEC)).replace(".",",")
@@ -1619,7 +1620,7 @@ class Main_UTECDA(QWidget):
             with open((self.filedir.get()  + ("/%s_matriz.txt")%(self.TITULO_TOPLEVEL_GRAFICO)), 'w', encoding = "UTF-8") as arquivoMat:
                 arquivoMat.write(Matriz_std)
         except PermissionError:
-            tk.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(95), parent = self.master)
+            ui.messagebox.showerror(self.Dado_config.idioma(49), self.Dado_config.idioma(95), parent = self.master)
     
     def SALVAR_MATRIZ_DADOS_GRAFICO_JANELA_TOPLEVEL_GRAFICO_EIA(self):
         
@@ -1805,18 +1806,18 @@ class Main_UTECDA(QWidget):
             self.Value_grid_axes_X.set(not self.Value_grid_axes_X.get())
             if self.Value_grid_axes_X.get():self.Popup_TopLevel_Grafico.entryconfig(self.Dado_config.idioma(141), label = self.Dado_config.idioma(142))
             else:self.Popup_TopLevel_Grafico.entryconfig(self.Dado_config.idioma(142), label = self.Dado_config.idioma(141))
-            try:self.AXES_TOPLEVEL_GRAFICO.xaxis.grid(  # CONVERT_GRIDself.Value_grid_axes_X.get())
+            try:self.AXES_TOPLEVEL_GRAFICO.xaxis.grid(self.Value_grid_axes_X.get())
             except (AttributeError,ValueError):
-                for axe_i in np.array(self.AXES_TOPLEVEL_GRAFICO).flatten():axe_i.xaxis.grid(  # CONVERT_GRIDself.Value_grid_axes_X.get())
+                for axe_i in np.array(self.AXES_TOPLEVEL_GRAFICO).flatten():axe_i.xaxis.grid(self.Value_grid_axes_X.get())
 
     def Atualizar_grid_Y_JANELA_TOPLEVEL_GRAFICO(self, Atualizar_Popup_TopLevel_Grafico = True):
         if Atualizar_Popup_TopLevel_Grafico:
             self.Value_grid_axes_Y.set(not self.Value_grid_axes_Y.get())
             if self.Value_grid_axes_Y.get():self.Popup_TopLevel_Grafico.entryconfig(self.Dado_config.idioma(139), label = self.Dado_config.idioma(140))
             else:self.Popup_TopLevel_Grafico.entryconfig(self.Dado_config.idioma(140), label = self.Dado_config.idioma(139))
-            try:self.AXES_TOPLEVEL_GRAFICO.yaxis.grid(  # CONVERT_GRIDself.Value_grid_axes_Y.get())
+            try:self.AXES_TOPLEVEL_GRAFICO.yaxis.grid(self.Value_grid_axes_Y.get())
             except (AttributeError,ValueError):
-                for axe_i in np.array(self.AXES_TOPLEVEL_GRAFICO).flatten():axe_i.yaxis.grid(  # CONVERT_GRIDself.Value_grid_axes_Y.get())
+                for axe_i in np.array(self.AXES_TOPLEVEL_GRAFICO).flatten():axe_i.yaxis.grid(self.Value_grid_axes_Y.get())
     
     def Thread_Pick_Event_PROPRIEDADES_JANELA_TOPLEVEL_GRAFICO(self,event):
         
@@ -2098,7 +2099,7 @@ class Main_UTECDA(QWidget):
     def del_extends_MAPA_PRINCIPAL(self):
 
 
-        if tk.messagebox.askokcancel(self.Dado_config.idioma(145),self.Dado_config.idioma(194)+' "'+self.Value_cb_Local_MAPA.get()+'"?',parent=self.master):
+        if ui.messagebox.askokcancel(self.Dado_config.idioma(145),self.Dado_config.idioma(194)+' "'+self.Value_cb_Local_MAPA.get()+'"?',parent=self.master):
             cont = 0
             for del_map in self.uti.list_duplicates_of(self.Dado_config.Settings["MAPAS"]["lNameMAP"],self.Value_cb_Local_MAPA.get()):
                 del(self.Dado_config.Settings["MAPAS"]["lNameMAP"][del_map-cont])
@@ -2170,7 +2171,7 @@ class Main_UTECDA(QWidget):
             a.style.labelstyle.scale = 5
             a.style.iconstyle.color = simplekml.Color.yellow	
         kml.save(("%s/UTECDA_GOOGLE_EARTH_%s.kml"%(self.filedir.get(),ano)))
-        tk.messagebox.showinfo(self.Dado_config.idioma(145), self.Dado_config.idioma(190), parent = self.master)
+        ui.messagebox.showinfo(self.Dado_config.idioma(145), self.Dado_config.idioma(190), parent = self.master)
         
         return
 
@@ -2224,7 +2225,7 @@ class Main_UTECDA(QWidget):
 
     def setarIDI(self,id):
         if self.Dado_config.Settings["INTERFACE"]["iLanguage"] != id:
-            if tk.messagebox.askokcancel(self.Dado_config.idioma(145),self.Dado_config.idioma(147),parent=self.master):
+            if ui.messagebox.askokcancel(self.Dado_config.idioma(145),self.Dado_config.idioma(147),parent=self.master):
                 self.Dado_config.Settings["INTERFACE"]["iLanguage"] = id
                 self.Dado_config.writeConfig()
                 self.Restart_Program()
@@ -2249,7 +2250,7 @@ class Main_UTECDA(QWidget):
 
 if __name__ == "__main__":
     try:
-        root = tk.Tk()
+        root = ui.Tk()
         
         Main_UTECDA(root).pack(side="top", fill="both", expand = True)
         root.mainloop()

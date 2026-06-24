@@ -32,9 +32,9 @@ class CadMap(QDialog):
 		self.grade.bind('<Delete>', self.Delitem)
 		self.grade.bind('<Double-Button-1>',self.Edititem)
 		self.grade.bind('<Escape>',self.Unselect)
-		ysb = ttk.Scrollbar(self.frameCs3,orient=tk.VERTICAL, command=self.grade.yview)
+		ysb = ttk.Scrollbar(self.frameCs3,orient="vertical", command=self.grade.yview)
 		self.grade['yscroll'] = ysb.set
-		ysb.pack(side='right',fill='y')#grid(row=0, column=1, sticky=tk.N + tk.S)
+		ysb.pack(side='right',fill='y')#grid(row=0, column=1, sticky="ns")
 		for c in self.dataCols:
 			self.grade.heading(c, text=c, command=lambda _c=c:self.uti.treeview_sort_column(self.grade, _c, False))
 

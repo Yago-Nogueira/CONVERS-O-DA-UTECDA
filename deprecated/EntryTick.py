@@ -1,7 +1,7 @@
-import qt_ui as tk
+import pyqt_utils as ui
 from util import Utilitarios,DadoIdioma
-from qt_ui import *	
-class EntryTick(tk.Toplevel):
+from pyqt_utils import *	
+class EntryTick(ui.Toplevel):
 	def __init__(self,master,plt=None):#,master,titulo = "asd",Valor="",font_c=True):
 		Toplevel.__init__(self, master)
 		

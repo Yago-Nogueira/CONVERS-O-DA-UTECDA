@@ -31,9 +31,9 @@ class CadObs(QDialog):
 		self.grade.bind('<Delete>', self.Delitem)
 		self.grade.bind('<Double-Button-1>',self.Edititem)
 		self.grade.bind('<Escape>',lambda e:self.Unselect())
-		ysb = ttk.Scrollbar(self.frameCs3,orient=tk.VERTICAL, command=self.grade.yview)
+		ysb = ttk.Scrollbar(self.frameCs3,orient="vertical", command=self.grade.yview)
 		self.grade['yscroll'] = ysb.set
-		ysb.pack(side='right',fill='y')#grid(row=0, column=1, sticky=tk.N + tk.S)
+		ysb.pack(side='right',fill='y')#grid(row=0, column=1, sticky="ns")
 		for c in self.dataCols:
 			self.grade.heading(c, text=c, command=lambda _c=c:self.uti.treeview_sort_column(self.grade, _c, False))
 
@@ -66,7 +66,7 @@ class CadObs(QDialog):
 		self.popup_tre.add_command(label=self.Dado_config.idioma(113), command=self.Unselect)
 		
 		self.grade.bind("<Button-3>", self.do_popup)
-		self.protocol("WM_DELETE_WINDOW",lambda tk=master:self.uti.troca(tk,self))
+		self.protocol("WM_DELETE_WINDOW",lambda parent=master: self.uti.troca(parent,self))
 		self.focus_set()
 		#self.wait_visibility(master)
 		self.lift()

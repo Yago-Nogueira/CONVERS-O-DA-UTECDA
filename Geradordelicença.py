@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from qt_ui.filedialog import askdirectory, askopenfilename
-from qt_ui import messagebox, Toplevel
+from pyqt_utils.filedialog import askdirectory, askopenfilename
+from pyqt_utils import messagebox, Toplevel
 from util import Utilitarios, DadoIdioma
-from qt_ui import *
-import qt_ui as tk
+from pyqt_utils import *
+import pyqt_utils as ui
 import random
 import math
 import os
