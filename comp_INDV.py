@@ -6,6 +6,11 @@ import matplotlib.ticker as ticker
 from qtfontchooser import askfont
 import matplotlib.pyplot as plt
 from util import Utilitarios 
+from shared_utils import (
+	apply_tick_params, configure_axis_locator, apply_axes_limits,
+	setup_tick_label_pickers, create_jet_colormap, ensure_date_order,
+	build_std_filepath,
+)
 import numpy as np
 import warnings
 
@@ -66,7 +71,7 @@ class COMP_INDV(QDialog):
 		uti = Utilitarios()
 		font = self._dado_config.get_font_Settings("INDIVIDUAL")
 		self._matplotlib_figure.set_facecolor('white')	
-		if self._data_inicial > self._data_final:backdata = self._data_inicial;self._data_inicial = self._data_final;self._data_final = backdata
+		self._data_inicial, self._data_final = ensure_date_order(self._data_inicial, self._data_final)
 		delta = self._data_final - self._data_inicial
 		# self._titulo =(("%s-%s-%.2i") % (self._sigla_estacao.lower(),self._data_inicial.year,self._data_inicial.month)) 
 		self._titulo =(("%s") % (self._sigla_estacao.upper())) 
@@ -77,8 +82,7 @@ class COMP_INDV(QDialog):
 			self._tec_dias.append(datafile.day)
 			dia_ano = datafile.timetuple().tm_yday
 			self._matriz_dias.append([('%s/%s')%(datafile.day,datafile.month),('%s')%(datafile.day)])
-			nfile = ("/%s%.3i-%i-%.2i-%.2i.Std") % (self._sigla_estacao.lower(),dia_ano,datafile.year,datafile.month,datafile.day)
-			destino = self._diretorio_dados + nfile
+			destino = build_std_filepath(self._diretorio_dados, self._sigla_estacao, datafile)
 			_matrizstd.append(uti.Leitura_trip(destino))
 		
 		_matrizstd = np.array(_matrizstd).transpose()	
@@ -105,38 +109,19 @@ class COMP_INDV(QDialog):
 				self._axes.set_xlabel(self._dado_config.Settings["INDIVIDUAL"]["sTitle_X"], picker=5, gid="x_label_graph:INDIVIDUAL",**font)
 				self._axes.set_ylim(0,1440)
 
-				try:
-					if self._dado_config.Settings["INDIVIDUAL"]["fValue_Passo_Ticks_Y_temp"]:self._axes.yaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["INDIVIDUAL"]["fValue_Passo_Ticks_Y_temp"]*60))
-					elif self._dado_config.Settings["INDIVIDUAL"]["iValue_Num_Ticks_Y_temp"]:self._axes.yaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["INDIVIDUAL"]["iValue_Num_Ticks_Y_temp"]))
-					else:self._axes.yaxis.set_major_locator(ticker.LinearLocator(24))
-				except KeyError:self._axes.yaxis.set_major_locator(ticker.LinearLocator(24))
-				try:
-					if self._dado_config.Settings["INDIVIDUAL"]["fValue_Passo_Ticks_X_temp"]:self._axes.xaxis.set_major_locator(ticker.MultipleLocator(self._dado_config.Settings["INDIVIDUAL"]["fValue_Passo_Ticks_X_temp"]))
-					elif self._dado_config.Settings["INDIVIDUAL"]["iValue_Num_Ticks_X_temp"]:self._axes.xaxis.set_major_locator(ticker.LinearLocator(self._dado_config.Settings["INDIVIDUAL"]["iValue_Num_Ticks_X_temp"]))
-					else:self._axes.xaxis.set_major_locator(ticker.MultipleLocator(2))
-				except KeyError:self._axes.xaxis.set_major_locator(ticker.MultipleLocator(2))
-				
-				try:self._axes.set_xlim(self._dado_config.Settings["INDIVIDUAL"]["fValueMin_Axes_X_temp"],self._dado_config.Settings["INDIVIDUAL"]["fValueMax_Axes_X_temp"])
-				except KeyError:pass
-				try:self._axes.set_ylim(self._dado_config.Settings["INDIVIDUAL"]["fValueMin_Axes_Y_temp"]*60,self._dado_config.Settings["INDIVIDUAL"]["fValueMax_Axes_Y_temp"]*60)
-				except KeyError:pass
+				configure_axis_locator(self._axes.yaxis, self._dado_config.Settings, "INDIVIDUAL", "Y", ticker.LinearLocator(24))
+				configure_axis_locator(self._axes.xaxis, self._dado_config.Settings, "INDIVIDUAL", "X", ticker.MultipleLocator(2))
+				apply_axes_limits(self._axes, self._dado_config.Settings, "INDIVIDUAL", y_scale=60.0)
 
 
 				self._axes.yaxis.set_major_formatter(ticker.FuncFormatter(self.major_formatterhora))
 				self._axes.xaxis.set_major_formatter(ticker.FuncFormatter(self.major_formatterdia))
 				self._axes.minorticks_on()
 				self.passo_ctick = 10
-				self.cmap = plt.cm.get_cmap("jet").copy()
-				self.cmap.set_under("white")
-				self.cmap.set_over("darkred")
+				self.cmap = create_jet_colormap()
 				self.plot_current=self._axes.contourf(self._tec_fix,levels=level,cmap=self.cmap,vmin = self._vtec_min, vmax=self._vtec_max,extend="both")
 				self._cbar = self._matplotlib_figure.colorbar(self.plot_current,ax = self._axes,ticks = np.arange(self._vtec_min,self._vtec_max+1,self.passo_ctick),)
-				for label in self._axes.get_xticklabels():
-					label.set_picker(True)
-					label.set_gid("ticks_x:INDIVIDUAL")
-				for label in self._axes.get_yticklabels():
-					label.set_picker(True)
-					label.set_gid("ticks_y:INDIVIDUAL")
+				setup_tick_label_pickers(self._axes, "INDIVIDUAL")
 				self._cbar.ax.set_picker(5)
 				self._cbar.ax.set_gid("tick_bar_graph:INDIVIDUAL")
 				self._cbar.ax.set_title(self._dado_config.Settings["INDIVIDUAL"]["sTitle_B"],**font,picker=5,pad=30,gid="label_bar_graph:INDIVIDUAL")
@@ -145,10 +130,7 @@ class COMP_INDV(QDialog):
 				size=self._dado_config.Settings["INDIVIDUAL"]["fHeightTickMajor_Y"],
 				labelsize=self._dado_config.Settings["INDIVIDUAL"]["fSizeLabelsTick_Y"])
 		
-		self._axes.tick_params(axis='x', which='minor', width=self._dado_config.Settings["INDIVIDUAL"]["fWidthTickMinor_X"],size=self._dado_config.Settings["INDIVIDUAL"]["fHeightTickMinor_X"])#,labelsize=tam_x))
-		self._axes.tick_params(axis='x', which='major', width=self._dado_config.Settings["INDIVIDUAL"]["fWidthTickMajor_X"],size=self._dado_config.Settings["INDIVIDUAL"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["INDIVIDUAL"]["fSizeLabelsTick_X"])
-		self._axes.tick_params(axis='y', which='minor', width=self._dado_config.Settings["INDIVIDUAL"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["INDIVIDUAL"]["fHeightTickMinor_Y"])#,labelsize=tam_y))
-		self._axes.tick_params(axis='y', which='major', width=self._dado_config.Settings["INDIVIDUAL"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["INDIVIDUAL"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["INDIVIDUAL"]["fSizeLabelsTick_Y"])
+		apply_tick_params(self._axes, self._dado_config.Settings, "INDIVIDUAL")
 		
 		# self._axes.tick_params(axis='x', which='minor', width=Larg_minor_X_INDIVIDUAL,size=Alt_minor_X_INDIVIDUAL)#,labelsize=tam_x))
 		# self._axes.tick_params(axis='x', which='major', width=Larg_major_X_INDIVIDUAL,size=Alt_major_X_INDIVIDUAL,labelsize=Tam_label_X_INDIVIDUAL)

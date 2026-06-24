@@ -3,6 +3,9 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 import numpy as np
 from util import Utilitarios, DadoIdioma
+from shared_utils import (
+	apply_tick_params, ensure_date_order, build_std_filepath,
+)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import warnings
@@ -37,7 +40,7 @@ class COMP_ONDAS(QDialog):
 		font = self._dado_config.get_font_Settings("DESVIO")
 		font_anchored = font
 		del(font_anchored['family'])
-		if self._data_inicial > self._data_final:backdata = self._data_inicial;self._data_inicial = self._data_final;self._data_final = backdata
+		self._data_inicial, self._data_final = ensure_date_order(self._data_inicial, self._data_final)
 		self.delta = self._data_final - self._data_inicial
 		#print(self.delta,self._data_final,self._data_inicial)
 		self.delta_days = self.delta.days+1
@@ -62,8 +65,7 @@ class COMP_ONDAS(QDialog):
 		for contd in range(self.delta_days):
 			datafile = (self._data_inicial + timedelta(days=contd))
 			self.datas_axes_X.append([datafile.date(),datafile.day])
-			nomefile_p = ("/%s%.3i-%i-%.2i-%.2i.Std") % (est_s[0].lower(),datafile.timetuple().tm_yday,datafile.year,datafile.month,datafile.day)
-			caminho_arquivo_p = self._diretorio_dados + nomefile_p
+			caminho_arquivo_p = build_std_filepath(self._diretorio_dados, est_s[0], datafile)
 			self.matriz_tec_p.append(self.uti.Leitura_trip(caminho_arquivo_p))
 		self.matriz_tec_p2 = np.array(self.matriz_tec_p).reshape(self.delta_days,1440)
 		self.matriz_tec_p = np.array(self.matriz_tec_p).reshape(self.delta_days*1440)
@@ -97,10 +99,7 @@ class COMP_ONDAS(QDialog):
 		self._axes[1].yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 		self._axes[1].tick_params(axis='both',direction='inout', which='major',top=True,right=True)
 		self._axes[1].tick_params(axis='both',direction='inout', which='minor' ,top=True,right=True)
-		self._axes[1].tick_params(axis='x', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_X"])
-		self._axes[1].tick_params(axis='x', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_X"])
-		self._axes[1].tick_params(axis='y', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_Y"])
-		self._axes[1].tick_params(axis='y', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_Y"])
+		apply_tick_params(self._axes[1], self._dado_config.Settings, "DESVIO")
 		self._axes[1].tick_params(axis='x',labelrotation=30)
 		self._axes[1].set_ylabel(self.tituloy,picker=5,gid="y_label_graph:Desvio",**font)
 		self._axes[1].set_xlabel(self.titulox,picker=5,gid="x_label_graph:Desvio",**font)
@@ -112,10 +111,7 @@ class COMP_ONDAS(QDialog):
 		self._axes[0].yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 		self._axes[0].tick_params(axis='both',direction='inout', which='major',top=True,right=True)
 		self._axes[0].tick_params(axis='both',direction='inout', which='minor' ,top=True,right=True)
-		self._axes[0].tick_params(axis='x', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_X"])
-		self._axes[0].tick_params(axis='x', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_X"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_X"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_X"])
-		self._axes[0].tick_params(axis='y', which='minor', width=self._dado_config.Settings["DESVIO"]["fWidthTickMinor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMinor_Y"])
-		self._axes[0].tick_params(axis='y', which='major', width=self._dado_config.Settings["DESVIO"]["fWidthTickMajor_Y"],size=self._dado_config.Settings["DESVIO"]["fHeightTickMajor_Y"],labelsize=self._dado_config.Settings["DESVIO"]["fSizeLabelsTick_Y"])
+		apply_tick_params(self._axes[0], self._dado_config.Settings, "DESVIO")
 		self._axes[0].set_ylabel(self.tituloy,picker=5,gid="y_label_graph:Desvio",**font)
 		for label in self._axes[1].get_yticklabels():
                         label.set_picker(True)
