@@ -2241,7 +2241,7 @@ class Main_UTECDA(QWidget):
         try:
             plt.close('all')
             self.master.destroy()
-        except:
+        except (AttributeError, RuntimeError):
             print('Não iniciou thread')
             self.master.destroy()
 

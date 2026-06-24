@@ -95,7 +95,7 @@ for x,y in zip(eq_y,eq_x):
 	a = kml.newpoint(coords=[(y,x)])
 	a.style.iconstyle.scale = 1
 	a.style.iconstyle.color = simplekml.Color.black
-	a.style.iconstyle.icon.href = 'http://maps.google.com/mapfiles/kml/shapes/target.png'
+	a.style.iconstyle.icon.href = 'https://maps.google.com/mapfiles/kml/shapes/target.png'
 	# a = kml.newpoint(name="",coords=[(y,x)])
 # #################|EQ|###########################################################################################################################
 l = []
@@ -125,7 +125,7 @@ for no,la,lo,dp in zip(est,lat,lon,diplat_list):
 		# a.style.iconstyle.color = simplekml.Color.lightgreen
 
 kml.save(nomearq+'.kml')
-import os
-os.system(nomearq+'.kml')
+import os, subprocess, shlex
+subprocess.Popen([os.path.abspath(nomearq+'.kml')], shell=False)
 
 
