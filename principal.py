@@ -727,7 +727,7 @@ class Principal():
 				self.img.canvas.draw()
 				self.img.canvas.flush_events()
 			self.pick_axes()
-		except:
+		except (AttributeError, ValueError, TypeError):
 			pass
 
 	def sel_map(self,event):
@@ -761,14 +761,14 @@ class Principal():
 			for event in events:
 				event.set_color('red')
 				self.update_scatter(event)
-		except:
+		except (AttributeError, ValueError, TypeError):
 			pass
 
 	def in_sel(self,event):
 		try:
 			event.set_color('green')
 			self.update_scatter(event)
-		except:
+		except (AttributeError, ValueError, TypeError):
 			pass
 	def modelo_mapa(self,*event):
 		self.la = self.ax_map.get_ylim()
@@ -1787,7 +1787,7 @@ class Principal():
 			self.clear_list_and_plot()
 			try:
 				nt_lista,self.conteudo_lista = self.uti.Refresh_list_obs(self.filedir,int(self.Data_Entry.get()[-4:]),self.check_filter_v.get(),True)
-			except:
+			except (ValueError, TypeError, IndexError):
 				self.conteudo_lista = self.uti.Refresh_list_obs(self.filedir,int(self.Data_Entry.get()[-4:]),self.check_filter_v.get(),True)[0]
 				nt_lista = []
 			

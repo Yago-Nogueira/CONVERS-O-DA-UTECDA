@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime#, timedelta, date
 import math
 import matplotlib.ticker as ticker
+import os
 
 # def major_formatteY(x, pos):
 #     return "%i" % (x/10)
@@ -13,7 +14,7 @@ import matplotlib.ticker as ticker
 #11.091667
 plt.rc('axes', linewidth = 2)
 plt.rc('font', weight = 'bold')
-_filedir = r"D:\IP&D\ATUAL DESK-NASA\DADOS_TEC_PARA_TESTE"
+_filedir = os.path.join(os.path.expanduser('~'), 'UTECDA', 'DADOS_TEC')
 # _filedir = r"C:\CMN_BRASIL"
 #_filedir = r"D:\IP&D\Dados\CMN\2017"
 

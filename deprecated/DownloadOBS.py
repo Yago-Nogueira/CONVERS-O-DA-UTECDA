@@ -1,6 +1,7 @@
 import shutil
 import urllib.request as request
 from contextlib import closing
+import os
 
 class DownloadOBS():
 	""" Clase para download dos arquivos no formato rinex da unvaco """
@@ -86,7 +87,7 @@ class DownloadOBS():
 est = ['alar','peaf']
 # dias = [182,183,184,190,191]
 dias = [182]
-teste = DownloadOBS(initano=2015, initdias=dias, initestacoes=est, initdirobs=r"C:\Users\Mateus_Pillat\Desktop\Nova pasta")
+teste = DownloadOBS(initano=2015, initdias=dias, initestacoes=est, initdirobs=os.path.join(os.path.expanduser('~'), 'UTECDA', 'downloads'))
 
 
 
